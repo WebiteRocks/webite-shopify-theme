@@ -1,0 +1,35 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Blank Shopify Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "Ognjen Knaus",
+    "theme_documentation_url": "https://webite.rocks",
+    "theme_support_url": "https://webite.rocks"
+  },
+  {
+    "name": "Logo & Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 50,
+        "max": 300,
+        "step": 10,
+        "default": 100,
+        "unit": "px",
+        "label": "Logo width"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  },
+]

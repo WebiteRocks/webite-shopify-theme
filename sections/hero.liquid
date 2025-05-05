@@ -1,0 +1,216 @@
+{% if section.index == 1 %}{{ 'section-hero.css' | asset_url | stylesheet_tag }}{% endif %}
+  
+<div webite-section-hero class="hero-section hero-section--{{ section.id }} uk-inline">
+{% comment %}  <picture>
+    <source
+            srcset="{{ section.settings.image | image_url: width: 1920, height: 920, crop: 'center' }}"
+            media="(min-width:768px)"
+    />
+    <img src="{{ section.settings.image | image_url: width: 500, height: 700, crop: 'center'}}" class="hero__image" alt="{{ section.settings.image.alt }}">
+  </picture>
+{% endcomment %}
+{% comment %}  <img srcset="
+             {%- if section.settings.image.width >= 165 -%}{{ section.settings.image | image_url: width: 165 }} 165w,{%- endif -%}
+             {%- if section.settings.image.width >= 360 -%}{{ section.settings.image | image_url: width: 360 }} 360w,{%- endif -%}
+             {%- if section.settings.image.width >= 533 -%}{{ section.settings.image | image_url: width: 533 }} 533w,{%- endif -%}
+             {%- if section.settings.image.width >= 1024 -%}{{ section.settings.image | image_url: width: 1920, height: 920 }} 720w{%- endif -%}
+             "
+       src="{{ section.settings.image | image_url: width: 500, height: 700 }}"
+       alt="{{ section.settings.image.alt | escape }}"
+       class="hero__image"
+       width="500"
+       height="700">{% endcomment %}
+    {% if section.settings.image  %}
+      {% if section.index == 1 %}
+        {{ section.settings.image | image_url: width: 1920, height: 920, crop: 'center' | image_tag: class:'hero__image', preload: true }}
+      {% else %}
+        {{ section.settings.image | image_url: width: 1920, height: 920, crop: 'center' | image_tag: class:'hero__image', loading: 'no' }}
+      {% endif %}
+    {% endif %}
+
+    <div class="hero__content page-width uk-position-center-left">
+    {% if section.settings.title != blank %}
+      <div class="hero__title h-xxl hero__title_custom_size">{{ section.settings.title }}</div>
+    {% endif %}
+
+    {% if section.settings.title_custom != blank %}
+      <div class="hero__title-custom display-text-small hero__title_custom_size">{{ section.settings.title_custom }}</div>
+    {% endif %}
+
+    {% if section.settings.copy != blank %}
+      <div class="hero__copy text-large">{{ section.settings.copy }}</div>
+    {% endif %}
+
+    {% if section.settings.button_text != blank %}
+      <a
+        class="hero__btn btn btn--{{ section.settings.button_style }}"
+        href="{{ section.settings.button_url }}"
+        {% if section.settings.new_tab %}
+          target="_blank"
+        {% endif %}
+      >
+        <span class="btn__text">{{ section.settings.button_text }}</span><ins></ins>
+      </a>
+    {% endif %}
+  </div>
+</div>
+<style>
+  .hero-section--{{ section.id }} {
+    color: {{ section.settings.text_color }};
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .hero-section--{{ section.id }}::before {
+    background: {{ section.settings.overlay_color }};
+    opacity: 0.{{ section.settings.overlay_opacity }};
+  }
+
+  {% if section.settings.center_content %}
+  #shopify-section-{{ section.id }} .hero__content {
+    align-items: center;
+    text-align: center;
+  }
+  {% endif %}
+
+  {% if section.settings.title_custom_size %}
+    #shopify-section-{{ section.id }} .hero__title_custom_size h1{
+      font-size: {{ section.settings.title_size_desktop }}px;
+    }
+    @media (max-width: 1024px) {
+      #shopify-section-{{ section.id }} .hero__title_custom_size h1{
+        font-size: {{ section.settings.title_size_mobile }}px;
+      }
+    }
+  {% endif %}
+</style>
+
+{% schema %}
+{
+  "name": "Hero",
+  "class": "hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "html",
+      "id": "title_custom",
+      "label": "Custom Title (Developers only)"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_custom_size",
+      "label": "Title Custom Size",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "min": 50,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size Desktop",
+      "default": 65
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 24,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size Desktop",
+      "default": 45
+    },
+    {
+      "type": "textarea",
+      "id": "copy",
+      "label": "Copy"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background  Color",
+      "default": "#000"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button TEXT"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button Style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        }
+      ],
+      "default": "secondary"
+    },
+    {
+      "type": "checkbox",
+      "id": "new_tab",
+      "label": "Open Link in New Tab",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 1,
+      "max": 99,
+      "step": 1,
+      "unit": "%",
+      "label": "Overlay Opacity (1-99)",
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "center_content",
+      "label": "Center Content",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "category": "Section"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

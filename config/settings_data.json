@@ -1,0 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "content_for_index": [],
+    "blocks": {
+      "2855438465747202944": {
+        "type": "shopify://apps/easyreviews/blocks/product_review_embed_block/1341251b-09d7-46f3-ba6a-e732a50e97a5",
+        "disabled": false,
+        "settings": {
+          "position": "product"
+        }
+      }
+    }
+  },
+  "presets": {
+    "Default": {}
+  }
+}

@@ -1,0 +1,74 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main_product_x96HHn": {
+      "type": "main-product",
+      "blocks": {
+        "title_MyLEpk": {
+          "type": "title",
+          "settings": {}
+        },
+        "small_description_QYrbUD": {
+          "type": "small_description",
+          "settings": {}
+        },
+        "whats_inside_6Y6BRw": {
+          "type": "whats_inside",
+          "settings": {}
+        },
+        "product_form_PbLkF8": {
+          "type": "product_form",
+          "settings": {}
+        },
+        "featured_icons_gManQM": {
+          "type": "featured_icons",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title_MyLEpk",
+        "small_description_QYrbUD",
+        "whats_inside_6Y6BRw",
+        "product_form_PbLkF8",
+        "featured_icons_gManQM"
+      ],
+      "settings": {
+        "space": "both",
+        "choose_product": "the-complete-snowboard"
+      }
+    },
+    "hero_8GPV4R": {
+      "type": "hero",
+      "settings": {
+        "title": "<p>Lorem ipsum dolor sit amet.</p>",
+        "title_custom": "Lorem ipsum dolor sit amet.",
+        "title_custom_size": false,
+        "title_size_desktop": 65,
+        "title_size_mobile": 45,
+        "copy": "Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
+        "text_color": "#ffffff",
+        "bg_color": "#000000",
+        "button_url": "shopify://products/the-multi-managed-snowboard",
+        "button_text": "Buy now",
+        "button_style": "secondary",
+        "new_tab": false,
+        "image": "shopify://shop_images/man-sitting-in-city.jpg",
+        "overlay_color": "#000000",
+        "overlay_opacity": 48,
+        "center_content": false
+      }
+    }
+  },
+  "order": [
+    "main_product_x96HHn",
+    "hero_8GPV4R"
+  ]
+}

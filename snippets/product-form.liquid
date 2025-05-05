@@ -1,0 +1,65 @@
+<form class="add-to-cart-form" action="/cart/add" method="post">
+    <div class="variant-options">
+    {% assign single_option_only = false %}
+      {% for option in product.options_with_values %}
+        {% if option.name == 'Title' %}
+            {% assign single_option_only = true %}
+        {% endif %}
+        {% unless option.name == 'Title' %}
+        <div class="variant-options__item item-padding-top">
+          {% if option.name == 'Color' %}
+            <h3 class="variant-options__heading title-text-md text-uppercase">{{  'product.choose_your_option' | t }} {{ option.name }}:</h3>
+            <div class="color-swatches">
+              {% for value in option.values %}
+                <label>
+                  <input hidden type="radio" name="{{ option.name }}" value="{{ value }}" {% if forloop.first %}checked{% endif %} class="color-option" data-option-index="{{ forloop.index0 }}">
+                  <span class="color-swatch" style="background-color: {{ value | handle }}" data-value="{{ value }}" data-index="{{ forloop.index0 }}"></span>
+                </label>
+              {% endfor %}
+            </div>
+          {% else %}
+            <h3 class="variant-options__heading title-text-md text-uppercase">{{  'product.choose_your_option' | t }} {{ option.name }}:</h3>
+            <div class="custom-select">
+              <div class="custom-select__selected-option">{{ option.values.first }}</div>
+              <div class="custom-select__variant-options" data-option-name="{{ option.name }}">
+              {% for value in option.values %}
+              <div class="custom-select__variant-option {% if forloop.first %}selected{% endif %}" data-value="{{ value }}" data-option-index="{{ forloop.index0 }}">{{ value }}</div>
+              {% endfor %}
+              </div>
+              <div class="custom-select__dropdown-arrow"></div>
+            </div>
+          {% endif %}
+        </div>
+        {% endunless %}
+
+      {% endfor %}
+    </div>
+
+    <label hidden for="id">Variant ID:</label>
+    <input type="hidden" name="id" class="selected-variant-id" value="{{ product.variants.first.id }}" />
+    
+    <div class="action-items item-padding-top">
+        <div class="quantity">
+            <span class="quantity__decrement">-</span>
+            <label hidden for="quantity">Quantity:</label>
+            <input type="number" class="quantity__input" name="quantity" value="01" min="1" />
+            <span class="quantity__increment">+</span>
+        </div>
+        <div class="button-wrapper">
+            <span class="action-items__free_text text-md text-center ">{{  'product.add_to_cart_button_message' | t }}</span>
+            <button class="btn btn--addtocart" type="submit" value="{{  'product.add_to_cart_button_text' | t }}"{% unless single_option_only %} disabled {% endunless %} />
+                <span class="btn__text">{{ 'product.add_to_cart_button_text' | t }} - </span>
+                <span class="variant-prices">
+                <span class="current-price">{{ product.variants.first.price | money }}</span>
+                <span class="compare-at-price" {% unless product.variants.first.compare_at_price > product.variants.first.price %}style="display:none;"{% endunless %}>
+                    {{ product.variants.first.compare_at_price | money }}
+                </span>
+                </span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="out-of-stock-message text-error"{% unless single_option_only and product.available == false %} style="display:none;"{% endunless %}>
+      {{ 'product.add_to_cart_button_soldout' | t }}
+    </div>
+  </form>

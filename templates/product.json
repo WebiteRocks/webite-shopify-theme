@@ -1,0 +1,65 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "easyreviews_star_rating_DXkMna": {
+          "type": "shopify:\/\/apps\/easyreviews\/blocks\/star_rating\/1341251b-09d7-46f3-ba6a-e732a50e97a5",
+          "settings": {}
+        },
+        "title_KLExjH": {
+          "type": "title",
+          "settings": {
+            "custom_title": ""
+          }
+        },
+        "small_description_jDC3Pz": {
+          "type": "small_description",
+          "settings": {}
+        },
+        "whats_inside_xPtDDr": {
+          "type": "whats_inside",
+          "settings": {}
+        },
+        "product_form_wqPdyY": {
+          "type": "product_form",
+          "settings": {}
+        },
+        "featured_icons_3MDBAf": {
+          "type": "featured_icons",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "easyreviews_star_rating_DXkMna",
+        "title_KLExjH",
+        "small_description_jDC3Pz",
+        "whats_inside_xPtDDr",
+        "product_form_wqPdyY",
+        "featured_icons_3MDBAf"
+      ],
+      "settings": {
+        "space": "both",
+        "choose_product": ""
+      }
+    },
+    "17354972287c435901": {
+      "type": "apps",
+      "blocks": {
+        "easyreviews_product_review_dFb4fX": {
+          "type": "shopify:\/\/apps\/easyreviews\/blocks\/product_review\/1341251b-09d7-46f3-ba6a-e732a50e97a5",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "easyreviews_product_review_dFb4fX"
+      ],
+      "disabled": true,
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "17354972287c435901"
+  ]
+}

@@ -1,0 +1,61 @@
+<!-- Cart popup -->
+<div id="cart-popup" style="display:none;">
+  <div class="cart-popup_content"> 
+    <img class="cart-popup__element popup-item-image" src="" alt="Item image" width="50"/>
+    <div class="cart-popup_text"> 
+      <p class="popup-item-title"></p>
+      <p class="cart-popup__element popup-item-sub_title"></p>
+      <span class="cart-popup__element popup-item-color"></span>
+    </div>
+  </div>
+  <div class="cart-popup_actions cart-popup__element"> 
+    <small class="cart-popup_notification text-success">{{  'product.added_notification' | t }}</small>
+    <a class="cart-popup_link" href="/cart">{{  'product.view_cart' | t }}</a>
+  </div>
+</div>
+
+<script>
+    
+    // Show custom popup after adding to cart
+    let popupTimeout;
+
+    const showPopup = (item, hideElements) => {
+      const popup = document.getElementById('cart-popup');
+      const itemImage = popup.querySelector('.popup-item-image');
+      const itemTitle = popup.querySelector('.popup-item-title');
+      const itemSubTitle = popup.querySelector('.popup-item-sub_title');
+      const itemColor = popup.querySelector('.popup-item-color');
+      const popupElements = popup.querySelectorAll('.cart-popup__element');
+
+      itemImage.src = item.image;
+      itemTitle.textContent = item.title;
+      itemSubTitle.textContent = item.subTitle;
+      itemColor.style.backgroundColor = item.color;
+      popup.style.display = 'flex';
+
+      popupElements.forEach(element => {
+      if (hideElements) {
+        element.style.display = 'none';
+      } else {
+        element.style.display = '';
+      }
+      });
+
+      // Clear any existing timeout
+      if (popupTimeout > 0) {
+        clearTimeout(popupTimeout);
+      }
+
+      // Set a new timeout
+      popupTimeout = setTimeout(() => {
+      popup.style.display = 'none';
+      popupElements.forEach(element => {
+        if (hideElements) {
+        element.style.display = '';
+        } else {
+        element.style.display = 'none';
+        }
+      });
+      }, 3000);
+    };
+</script>

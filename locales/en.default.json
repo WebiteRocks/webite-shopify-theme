@@ -1,0 +1,15 @@
+{
+  "cart": {
+    "quantity": "Quantity:",
+    "price": "Price:",
+    "total": "Total:"
+  },
+  "product": {
+    "choose_your_option": "Choose your",
+    "add_to_cart_button_message" :"Free US Shipping over $65 | Free US Returns",
+    "add_to_cart_button_text": "Add to Cart",
+    "add_to_cart_button_soldout": "This variant is currently out of stock.",
+    "added_notification": "ADDED!",
+    "view_cart": "View Cart"
+  }
+}
