@@ -48,6 +48,7 @@
     },
     "hero_8GPV4R": {
       "type": "hero",
+      "disabled": true,
       "settings": {
         "title": "<p>Lorem ipsum dolor sit amet.</p>",
         "title_custom": "Lorem ipsum dolor sit amet.",
