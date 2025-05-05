@@ -1,0 +1,20 @@
+{
+    "liveSassCompile.settings.rootIsWorkspace": true,
+    "liveSassCompile.settings.generateMap": false,
+    "liveSassCompile.settings.partialsList": [
+        "/**/_*.s[ac]ss"
+    ],
+    "liveSassCompile.settings.compileOnWatch": false,
+    "liveSassCompile.settings.useNewCompiler": true,
+    "liveSassCompile.settings.formats": [
+        {
+            "format": "compressed",
+            "extensionName": ".css",
+            "savePath": "/assets",
+            "savePathReplacementPairs": null
+        }
+    ],
+    "json.schemas": [
+
+    ]
+}

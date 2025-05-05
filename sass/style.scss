@@ -1,0 +1,15 @@
+// UIkit variables and custom variable overrides
+@import "uikit-theme/variables.scss";
+
+// UIkit mixins
+@import "../uikit/mixins-theme.scss";
+
+// Custom mixins for components override (using hooks)
+// (see: https://getuikit.com/docs/sass#use-hooks)
+@import "uikit-theme/mixins/import.scss";
+
+// Partial import of UIkit components needed by our theme
+@import "uikit-components.scss";
+
+// Our custom styles
+@import "custom.scss";
