@@ -31,8 +31,7 @@
     {{ content_for_header }}
     {% comment %} {% include 'css-vars' %} {% endcomment %}
     {% comment %} {{ 'main.css' | asset_url | stylesheet_tag: preload: boolean }} {% endcomment %}
-      {{ 'style.css' | asset_url | stylesheet_tag: preload: boolean }}
-      {{ 'uikit.min.js' | asset_url | script_tag }}
+     {{ 'style.css' | asset_url | stylesheet_tag: preload: true }}
   </head>
 
   <body>
@@ -78,10 +77,10 @@
             </div>
           </div>
         </div>
-        <div class="uk-navbar-container tm-navbar-container uk-sticky tm-navbar-container-fixed uk-sticky-below uk-sticky-fixed" uk-sticky="cls-active: tm-navbar-container-fixed" style="position: fixed; top: 0px; width: 1487px;">
+        <div class="uk-navbar-container tm-navbar-container" uk-sticky="cls-active: tm-navbar-container-fixed">
           <div class="uk-container uk-navbar" uk-navbar="">
             <div class="uk-navbar-left">
-              <button class="uk-navbar-toggle uk-hidden@m uk-navbar-toggle-icon uk-icon" uk-toggle="target: #nav-offcanvas" uk-navbar-toggle-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="navbar-toggle-icon"><rect y="9" width="20" height="2"></rect><rect y="3" width="20" height="2"></rect><rect y="15" width="20" height="2"></rect></svg></button><a class="uk-navbar-item uk-logo" href="index.html"><img src="images/logo.svg" width="90" height="32" alt="Logo"></a>
+              <button class="uk-navbar-toggle uk-hidden@m uk-navbar-toggle-icon uk-icon" uk-toggle="target: #nav-offcanvas" uk-navbar-toggle-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="navbar-toggle-icon"><rect y="9" width="20" height="2"></rect><rect y="3" width="20" height="2"></rect><rect y="15" width="20" height="2"></rect></svg></button><a class="uk-navbar-item uk-logo" href="index.html">LOGO</a>
               <nav class="uk-visible@m">
                 <ul class="uk-navbar-nav">
                   <li><a href="catalog.html">Catalog<span class="uk-margin-xsmall-left uk-icon" uk-icon="icon: chevron-down; ratio: .75;"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="chevron-down"><polyline fill="none" stroke="#000" stroke-width="1.03" points="16 7 10 13 4 7"></polyline></svg></span></a>
@@ -89,7 +88,7 @@
                       <div class="uk-container">
                         <ul class="uk-navbar-dropdown-grid uk-child-width-1-5 uk-grid uk-grid-stack" uk-grid="">
                           <li>
-                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="images/catalog/computers.svg" alt="Laptops &amp; Tablets" width="80" height="80">
+                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="https://placehold.co/80x80" alt="Laptops &amp; Tablets" width="80" height="80">
                                 <div class="uk-text-bolder">Laptops &amp; Tablets</div></a>
                               <ul class="uk-nav uk-nav-default">
                                 <li><a href="subcategory.html">Laptops</a></li>
@@ -101,7 +100,7 @@
                             </div>
                           </li>
                           <li>
-                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="images/catalog/phones.svg" alt="Phones &amp; Gadgets" width="80" height="80">
+                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="https://placehold.co/80x80" alt="Phones &amp; Gadgets" width="80" height="80">
                                 <div class="uk-text-bolder">Phones &amp; Gadgets</div></a>
                               <ul class="uk-nav uk-nav-default">
                                 <li><a href="subcategory.html">Smartphones</a></li>
@@ -113,7 +112,7 @@
                             </div>
                           </li>
                           <li>
-                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="images/catalog/tv.svg" alt="TV &amp; Video" width="80" height="80">
+                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="https://placehold.co/80x80" alt="TV &amp; Video" width="80" height="80">
                                 <div class="uk-text-bolder">TV &amp; Video</div></a>
                               <ul class="uk-nav uk-nav-default">
                                 <li><a href="subcategory.html">TV</a></li>
@@ -126,7 +125,7 @@
                             </div>
                           </li>
                           <li>
-                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="images/catalog/games.svg" alt="Games &amp; Entertainment" width="80" height="80">
+                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="https://placehold.co/80x80" alt="Games &amp; Entertainment" width="80" height="80">
                                 <div class="uk-text-bolder">Games &amp; Entertainment</div></a>
                               <ul class="uk-nav uk-nav-default">
                                 <li><a href="subcategory.html">Gaming consoles</a></li>
@@ -138,7 +137,7 @@
                             </div>
                           </li>
                           <li>
-                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="images/catalog/photo.svg" alt="Photo" width="80" height="80">
+                            <div class="uk-margin-top uk-margin-bottom"><a class="uk-link-reset" href="category.html"><img class="uk-display-block uk-margin-auto uk-margin-bottom" src="https://placehold.co/80x80" alt="Photo" width="80" height="80">
                                 <div class="uk-text-bolder">Photo</div></a>
                               <ul class="uk-nav uk-nav-default">
                                 <li><a href="subcategory.html">Cameras</a></li>
@@ -157,35 +156,35 @@
                         <ul class="uk-grid-small uk-child-width-1-6 uk-grid uk-grid-stack" uk-grid="">
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Apple">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/apple.svg" alt="Apple"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Apple"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Samsung">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/samsung.svg" alt="Samsung"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Samsung"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Sony">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/sony.svg" alt="Sony"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Sony"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Microsoft">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/microsoft.svg" alt="Microsoft"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Microsoft"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Intel">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/intel.svg" alt="Intel"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Intel"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="HP">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/hp.svg" alt="HP"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="HP"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="LG">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/lg.svg" alt="LG"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="LG"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Lenovo">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/lenovo.svg" alt="Lenovo"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Lenovo"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="ASUS">
@@ -193,15 +192,15 @@
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Acer">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/acer.svg" alt="Acer"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Acer"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Dell">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/dell.svg" alt="Dell"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Dell"></figure></a></div>
                           </li>
                           <li>
                             <div class="tm-ratio tm-ratio-4-3"><a class="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large tm-media-box" href="#" title="Canon">
-                                <figure class="tm-media-box-wrap"><img src="images/brands/canon.svg" alt="Canon"></figure></a></div>
+                                <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Canon"></figure></a></div>
                           </li>
                         </ul>
                         <div class="uk-text-center uk-margin"><a class="uk-link-muted uk-text-uppercase tm-link-to-all" href="brands.html"><span>See all brands</span><span uk-icon="icon: chevron-right; ratio: .75;" class="uk-icon"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="chevron-right"><polyline fill="none" stroke="#000" stroke-width="1.03" points="7 4 13 10 7 16"></polyline></svg></span></a>
@@ -248,7 +247,7 @@
               </nav>
             </div>
             <div class="uk-navbar-right"><a class="uk-navbar-toggle tm-navbar-button uk-search-icon uk-icon" href="#" uk-search-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="search-icon"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg></a>
-              <div class="uk-navbar-dropdown uk-padding-small uk-margin-remove" uk-drop="mode: click;cls-drop: uk-navbar-dropdown;boundary: .tm-navbar-container;boundary-align: true;pos: bottom-justify;flip: x">
+              <div class="uk-navbar-dropdown uk-padding-small uk-margin-remove uk-drop" uk-drop="mode: click;cls-drop: uk-navbar-dropdown;boundary: .tm-navbar-container;boundary-align: true;pos: bottom-justify;flip: x">
                 <div class="uk-container">
                   <div class="uk-grid-small uk-flex-middle uk-grid" uk-grid="">
                     <div class="uk-width-expand">
@@ -260,7 +259,7 @@
                   </div>
                 </div>
               </div><a class="uk-navbar-item uk-link-muted uk-visible@m tm-navbar-button" href="compare.html"><span uk-icon="copy" class="uk-icon"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="copy"><rect fill="none" stroke="#000" x="3.5" y="2.5" width="12" height="16"></rect><polyline fill="none" stroke="#000" points="5 0.5 17.5 0.5 17.5 17"></polyline></svg></span><span class="uk-badge">3</span></a><a class="uk-navbar-item uk-link-muted tm-navbar-button uk-icon" href="account.html" uk-icon="user"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="user"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9.9" cy="6.4" r="4.4"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M1.5,19 C2.3,14.5 5.8,11.2 10,11.2 C14.2,11.2 17.7,14.6 18.5,19.2"></path></svg></a>
-              <div class="uk-padding-small uk-margin-remove uk-dropdown" uk-dropdown="pos: bottom-right; offset: -10; delay-hide: 200;" style="min-width: 150px;">
+              <div class="uk-padding-small uk-margin-remove uk-dropdown uk-drop" uk-dropdown="pos: bottom-right; offset: -10; delay-hide: 200;" style="min-width: 150px;">
                 <ul class="uk-nav uk-dropdown-nav">
                   <li><a href="account.html">
                       Orders
@@ -276,7 +275,7 @@
               </div><a class="uk-navbar-item uk-link-muted tm-navbar-button" href="cart.html" uk-toggle="target: #cart-offcanvas" onclick="return false"><span uk-icon="cart" class="uk-icon"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="cart"><circle cx="7.3" cy="17.3" r="1.4"></circle><circle cx="13.3" cy="17.3" r="1.4"></circle><polyline fill="none" stroke="#000" points="0 2 3.2 4 5.3 12.5 16 12.5 18 6.5 8 6.5"></polyline></svg></span><span class="uk-badge">2</span></a>
             </div>
           </div>
-        </div><div class="uk-sticky-placeholder" style="height: 61px; margin: 0px;"></div>
+        </div>
       </header>
 
       
@@ -298,7 +297,7 @@
                     <div class="uk-grid-small uk-grid" uk-grid="">
                       <div class="uk-width-1-4 uk-first-column">
                         <div class="tm-ratio tm-ratio-4-3"><a class="tm-media-box" href="product.html">
-                            <figure class="tm-media-box-wrap"><img src="images/products/1/1-small.jpg" alt="Apple MacBook Pro 15&quot; Touch Bar MPTU2LL/A 256GB (Silver)">
+                            <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Apple MacBook Pro 15&quot; Touch Bar MPTU2LL/A 256GB (Silver)">
                             </figure></a></div>
                       </div>
                       <div class="uk-width-expand">
@@ -317,7 +316,7 @@
                     <div class="uk-grid-small uk-grid" uk-grid="">
                       <div class="uk-width-1-4 uk-first-column">
                         <div class="tm-ratio tm-ratio-4-3"><a class="tm-media-box" href="product.html">
-                            <figure class="tm-media-box-wrap"><img src="images/products/2/2-small.jpg" alt="Apple MacBook 12&quot; MNYN2LL/A 512GB (Rose Gold)">
+                            <figure class="tm-media-box-wrap"><img src="https://placehold.co/80x80" alt="Apple MacBook 12&quot; MNYN2LL/A 512GB (Rose Gold)">
                             </figure></a></div>
                       </div>
                       <div class="uk-width-expand">
@@ -373,7 +372,7 @@
     {% comment %} <script src="{{ 'swiffy-slider.min.js' | asset_url }}" defer="defer"></script>
     {{ 'swiffy-slider.min.css' | asset_url | stylesheet_tag: preload: boolean }} {% endcomment %}
     
-    {% comment %}
+
   <script>
   //after page loads create script and add src dynamically
     document.addEventListener("DOMContentLoaded", function() {
@@ -471,7 +470,6 @@
       // });
     });
   </script> 
-{% endcomment %}
 
 {% comment %}
     <!-- Google Tag Manager -->
@@ -498,5 +496,6 @@
 
     </script>
     {% endcomment %}
+
   </body>
 </html>
