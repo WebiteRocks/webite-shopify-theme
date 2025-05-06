@@ -40,6 +40,7 @@
         "product_form_PbLkF8",
         "featured_icons_gManQM"
       ],
+      "disabled": true,
       "settings": {
         "space": "both",
         "choose_product": "the-complete-snowboard"
@@ -47,6 +48,7 @@
     },
     "hero_8GPV4R": {
       "type": "hero",
+      "disabled": true,
       "settings": {
         "title": "<p>Lorem ipsum dolor sit amet.</p>",
         "title_custom": "Lorem ipsum dolor sit amet.",
