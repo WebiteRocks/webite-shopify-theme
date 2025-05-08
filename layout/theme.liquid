@@ -675,7 +675,7 @@
     {% comment %} <script src="{{ 'swiffy-slider.min.js' | asset_url }}" defer="defer"></script>
     {{ 'swiffy-slider.min.css' | asset_url | stylesheet_tag: preload: boolean }} {% endcomment %}
     
- {% comment %}
+
   <script>
   //after page loads create script and add src dynamically
     document.addEventListener("DOMContentLoaded", function() {
@@ -773,7 +773,7 @@
       // });
     });
   </script> 
-{% endcomment %}
+
 {% comment %}
     <!-- Google Tag Manager -->
    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KT4R3BS4');</script> 
@@ -799,6 +799,6 @@
 
     </script>
     {% endcomment %}
-    {{ 'uikit.min.js' | asset_url | script_tag }}
+    {% comment %} {{ 'uikit.min.js' | asset_url | script_tag }} {% endcomment %}
   </body>
 </html>
