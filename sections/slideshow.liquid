@@ -1,0 +1,30 @@
+<section class="uk-position-relative uk-visible-toggle uk-light uk-slideshow" uk-slideshow="min-height: 300; max-height: 600;">
+    <ul class="uk-slideshow-items" style="min-height: 600px;">
+        <li style="background-color: rgb(11, 10, 18); transform: translateX(0px);" class="uk-active uk-transition-active"><a href="#">
+            <figure class="uk-container uk-height-1-1"><img src="https://placehold.co/1200x600" alt="New Macbook" width="1200" height="600" uk-cover="" class="uk-cover"></figure></a></li>
+        <li style="background-color: #ce071e"><a href="#">
+            <figure class="uk-container uk-height-1-1"><img src="https://placehold.co/1200x600" alt="iPhone" width="1200" height="600" uk-cover="" class="uk-cover"></figure></a></li>
+        <li style="background-color: #1f2024"><a href="#">
+            <figure class="uk-container uk-height-1-1"><img src="https://placehold.co/1200x600" alt="iPad" width="1200" height="600" uk-cover="" class="uk-cover"></figure></a></li>
+    </ul><a class="uk-position-center-left uk-position-small uk-hidden-hover uk-slidenav-previous uk-icon uk-slidenav" href="#" uk-slideshow-item="previous" uk-slidenav-previous=""><svg width="14" height="24" viewBox="0 0 14 24" xmlns="http://www.w3.org/2000/svg" data-svg="slidenav-previous"><polyline fill="none" stroke="#000" stroke-width="1.4" points="12.775,1 1.225,12 12.775,23 "></polyline></svg></a><a class="uk-position-center-right uk-position-small uk-hidden-hover uk-slidenav-next uk-icon uk-slidenav" href="#" uk-slideshow-item="next" uk-slidenav-next=""><svg width="14" height="24" viewBox="0 0 14 24" xmlns="http://www.w3.org/2000/svg" data-svg="slidenav-next"><polyline fill="none" stroke="#000" stroke-width="1.4" points="1.225,23 12.775,12 1.225,1 "></polyline></svg></a>
+    <div class="uk-position-bottom-center uk-position-small">
+    <ul class="uk-slideshow-nav uk-dotnav"><li uk-slideshow-item="0" class="uk-active"><a href="#"></a></li><li uk-slideshow-item="1"><a href="#"></a></li><li uk-slideshow-item="2"><a href="#"></a></li></ul>
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "class": "section-slideshow",
+  "tag": "section",
+  "settings": [
+
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "category": "Carousels"
+    }
+  ]
+}
+{% endschema %}

@@ -1,11 +1,14 @@
+// Import variables
+@import "../../uikit/variables-theme.scss";
+
 //
 // UIkit global variables definitions
 //
 // Default variables with default values needed for custom variables below ("Theme" section)
-// (check "~node_modules/uikit/src/scss/variables.scss" for list of all available variables)
+// (check "../../uikit/variables.scss" for list of all available variables)
 //
 
-$global-background: #FFF;
+$global-background: #fff;
 $global-border-width: 1px;
 $global-border-width: 1px;
 $global-border: #E5E5E5;
@@ -111,5 +114,42 @@ $navbar-nav-item-height: 40px;
 // Overlay
 $overlay-primary-color-mode: none;
 
-// Import variables
-@import "../../uikit/variables-theme";
+
+//////////////////////////////
+// Custom variables
+//////////////////////////////
+
+// Breakpoints
+$breakpoint-tablet: 768px;
+
+// Product card
+$product-card-title-max-lines: 3;
+$product-card-title-font-size: 16px;
+$product-card-title-line-height: 22px;
+$product-card-title-max-height: $product-card-title-max-lines * $product-card-title-line-height;
+$product-card-title-font-size-s: 18px;
+$product-card-title-line-height-s: 24px;
+$product-card-title-max-height-s: $product-card-title-max-lines * $product-card-title-line-height-s;
+$product-card-price-font-size: 20px;
+$product-card-add-button-width: 36px;
+$product-card-add-button-height: 36px;
+
+// List view product card
+$list-view-product-card-media-width: 33.3%;
+$list-view-product-card-media-min-width: 170px;
+$list-view-product-card-price-font-size: 24px;
+
+// Scrollbox
+$scrollbox-max-height: 300px;
+
+// Checkbox, radio
+$control-checkbox-image: "../../images/backgrounds/form-checkbox.svg";
+$control-radio-image: "../../images/backgrounds/form-radio.svg";
+$control-inputs-size: 16px;
+$control-inputs-hover: #F8F8F8;
+
+// Ratio
+$ratio-1-1: 100%;
+$ratio-3-2: 66.66%;
+$ratio-4-3: 75%;
+$ratio-16-9: 56.25%;

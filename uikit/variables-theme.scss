@@ -1,4 +1,5 @@
 $global-margin: 20px !default;
+$global-xsmall-margin: 5px !default;
 $accordion-item-margin-top: $global-margin !default;
 $global-medium-font-size: 1.25rem !default;
 $accordion-title-font-size: $global-medium-font-size !default;
@@ -34,6 +35,7 @@ $global-danger-background: #f0506e !default;
 $alert-danger-background: lighten(mix(white, $global-danger-background, 40%), 20%) !default;
 $alert-danger-color: $global-danger-background !default;
 $global-gutter: 30px !default;
+$global-xsmall-gutter: 10px !default;
 $align-margin-horizontal: $global-gutter !default;
 $align-margin-vertical: $global-gutter !default;
 $global-medium-gutter: 40px !default;
@@ -80,6 +82,7 @@ $global-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hel
 $base-body-font-family: $global-font-family !default;
 $base-body-font-weight: normal !default;
 $global-font-size: 16px !default;
+$global-xsmall-font-size: 12px !default;
 $base-body-font-size: $global-font-size !default;
 $global-line-height: 1.5 !default;
 $base-body-line-height: $global-line-height !default;

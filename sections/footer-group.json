@@ -9,7 +9,7 @@
  * ------------------------------------------------------------
  */
 {
-  "name":"Footer group",
+  "name":"Footer",
   "type":"footer",
   "sections":{
     "newsletter":{

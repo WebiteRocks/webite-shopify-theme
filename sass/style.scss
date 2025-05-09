@@ -1,13 +1,15 @@
-// UIkit variables and custom variable overrides
+// 1. Your custom variables and variable overwrites.
 @import "uikit-theme/variables.scss";
 
-// UIkit mixins
-@import "../uikit/mixins-theme.scss";
+// 2. Import default variables and available mixins.
+// @import "../uikit/variables.scss"; //We have this in the variables.scss file - Ognjen
+//@import "../uikit/mixins.scss"; // Looks like it is woking without this - Ognjen
 
-// Custom mixins for components override (using hooks)
+// 3. Your custom mixin overwrites (using hooks)
 // (see: https://getuikit.com/docs/sass#use-hooks)
-@import "uikit-theme/mixins/import.scss";
+@import "uikit-theme/mixins/_import.scss";
 
+// 4. Import UIkit
 // Partial import of UIkit components needed by our theme
 @import "uikit-components.scss";
 

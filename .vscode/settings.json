@@ -4,6 +4,9 @@
     "liveSassCompile.settings.partialsList": [
         "/**/_*.s[ac]ss"
     ],
+    "liveSassCompile.settings.excludeList": [
+        "/uikit/**"
+    ],
     "liveSassCompile.settings.compileOnWatch": false,
     "liveSassCompile.settings.useNewCompiler": true,
     "liveSassCompile.settings.formats": [

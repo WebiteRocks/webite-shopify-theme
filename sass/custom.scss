@@ -1,41 +1,8 @@
-//
-// Custom variables
-//
+// UIkit mixins
+@import "uikit-theme/variables.scss";
 
-// Breakpoints
-$breakpoint-tablet: 768px;
-
-// Product card
-$product-card-title-max-lines: 3;
-$product-card-title-font-size: 16px;
-$product-card-title-line-height: 22px;
-$product-card-title-max-height: $product-card-title-max-lines * $product-card-title-line-height;
-$product-card-title-font-size-s: 18px;
-$product-card-title-line-height-s: 24px;
-$product-card-title-max-height-s: $product-card-title-max-lines * $product-card-title-line-height-s;
-$product-card-price-font-size: 20px;
-$product-card-add-button-width: 36px;
-$product-card-add-button-height: 36px;
-
-// List view product card
-$list-view-product-card-media-width: 33.3%;
-$list-view-product-card-media-min-width: 170px;
-$list-view-product-card-price-font-size: 24px;
-
-// Scrollbox
-$scrollbox-max-height: 300px;
-
-// Checkbox, radio
-$control-checkbox-image: "../../images/backgrounds/form-checkbox.svg";
-$control-radio-image: "../../images/backgrounds/form-radio.svg";
-$control-inputs-size: 16px;
-$control-inputs-hover: #F8F8F8;
-
-// Ratio
-$ratio-1-1: 100%;
-$ratio-3-2: 66.66%;
-$ratio-4-3: 75%;
-$ratio-16-9: 56.25%;
+// UIkit mixins
+@import "../uikit/components/mixin.scss";
 
 //
 // Custom mixins
@@ -64,7 +31,7 @@ $ratio-16-9: 56.25%;
 /* Tablet landscape and bigger */
 @media (min-width: $breakpoint-medium) {
     h3, .uk-h3 {
-        font-size: $base-h3-font-size-m;
+        font-size: $base-h3-font-size;
     }
 }
 
@@ -193,7 +160,8 @@ $ratio-16-9: 56.25%;
         border-left: none;
     }
 
-    @media (max-width: $breakpoint-tablet - 1) {
+    $breakpoint-tablet-minus-1: $breakpoint-tablet - 1;
+    @media (max-width: $breakpoint-tablet-minus-1) {
         width: 100%;
     }
 
@@ -744,7 +712,7 @@ $ratio-16-9: 56.25%;
 
 .tm-product-nav-fixed {
     transition: box-shadow 0.1s ease-in-out;
-    box-shadow: inset 0 -$global-border-width 0 0 $global-border;
+    box-shadow: inset 0 (-$global-border-width) 0 0 $global-border;
 }
 
 //
@@ -939,9 +907,9 @@ $ratio-16-9: 56.25%;
         vertical-align: top;
     }
 
-    td:not(:first-child) {
-        //border-left: $table-striped-border-width solid $table-striped-border;
-    }
+    // td:not(:first-child) {
+    //     border-left: $table-striped-border-width solid $table-striped-border;
+    // }
 
     th {
         font-size: $global-font-size;
