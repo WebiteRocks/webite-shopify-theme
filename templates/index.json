@@ -9,6 +9,16 @@
  */
 {
   "sections": {
+    "slideshow_9JBQWW": {
+      "type": "slideshow",
+      "name": "Slideshow",
+      "settings": {}
+    },
+    "featured_blog_NhhjdF": {
+      "type": "featured-blog",
+      "name": "Featured Blog",
+      "settings": {}
+    },
     "main_product_x96HHn": {
       "type": "main-product",
       "blocks": {
@@ -67,9 +77,17 @@
         "overlay_opacity": 48,
         "center_content": false
       }
+    },
+    "info_news_zfPj9g": {
+      "type": "info-news",
+      "name": "Info News",
+      "settings": {}
     }
   },
   "order": [
+    "slideshow_9JBQWW",
+    "info_news_zfPj9g",
+    "featured_blog_NhhjdF",
     "main_product_x96HHn",
     "hero_8GPV4R"
   ]
