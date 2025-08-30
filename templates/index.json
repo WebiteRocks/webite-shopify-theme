@@ -11,7 +11,6 @@
   "sections": {
     "slideshow_9JBQWW": {
       "type": "slideshow",
-      "disabled": true,
       "name": "Slideshow",
       "settings": {}
     },
@@ -86,8 +85,8 @@
     }
   },
   "order": [
-    "slideshow_9JBQWW",
     "info_news_zfPj9g",
+    "slideshow_9JBQWW",
     "featured_blog_NhhjdF",
     "main_product_x96HHn",
     "hero_8GPV4R"
