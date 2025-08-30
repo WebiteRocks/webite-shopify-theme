@@ -9,14 +9,15 @@
  */
 {
   "sections": {
-    "slideshow_9JBQWW": {
-      "type": "slideshow",
-      "name": "Slideshow",
-      "settings": {}
-    },
     "info_news_zfPj9g": {
       "type": "info-news",
       "name": "Info News",
+      "settings": {}
+    },
+    "slideshow_9JBQWW": {
+      "type": "slideshow",
+      "disabled": true,
+      "name": "Slideshow",
       "settings": {}
     },
     "featured_blog_NhhjdF": {
