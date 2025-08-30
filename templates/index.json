@@ -14,6 +14,11 @@
       "name": "Slideshow",
       "settings": {}
     },
+    "info_news_zfPj9g": {
+      "type": "info-news",
+      "name": "Info News",
+      "settings": {}
+    },
     "featured_blog_NhhjdF": {
       "type": "featured-blog",
       "name": "Featured Blog",
@@ -50,7 +55,6 @@
         "product_form_PbLkF8",
         "featured_icons_gManQM"
       ],
-      "disabled": true,
       "settings": {
         "space": "both",
         "choose_product": "the-complete-snowboard"
@@ -77,18 +81,13 @@
         "overlay_opacity": 48,
         "center_content": false
       }
-    },
-    "info_news_zfPj9g": {
-      "type": "info-news",
-      "name": "Info News",
-      "settings": {}
     }
   },
   "order": [
     "slideshow_9JBQWW",
+    "main_product_x96HHn",
     "info_news_zfPj9g",
     "featured_blog_NhhjdF",
-    "main_product_x96HHn",
     "hero_8GPV4R"
   ]
 }
