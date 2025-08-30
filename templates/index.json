@@ -14,16 +14,6 @@
       "name": "Slideshow",
       "settings": {}
     },
-    "info_news_zfPj9g": {
-      "type": "info-news",
-      "name": "Info News",
-      "settings": {}
-    },
-    "featured_blog_NhhjdF": {
-      "type": "featured-blog",
-      "name": "Featured Blog",
-      "settings": {}
-    },
     "main_product_x96HHn": {
       "type": "main-product",
       "blocks": {
@@ -55,10 +45,21 @@
         "product_form_PbLkF8",
         "featured_icons_gManQM"
       ],
+      "disabled": true,
       "settings": {
         "space": "both",
         "choose_product": "the-complete-snowboard"
       }
+    },
+    "info_news_zfPj9g": {
+      "type": "info-news",
+      "name": "Info News",
+      "settings": {}
+    },
+    "featured_blog_NhhjdF": {
+      "type": "featured-blog",
+      "name": "Featured Blog",
+      "settings": {}
     },
     "hero_8GPV4R": {
       "type": "hero",
@@ -85,9 +86,9 @@
   },
   "order": [
     "slideshow_9JBQWW",
-    "main_product_x96HHn",
     "info_news_zfPj9g",
     "featured_blog_NhhjdF",
+    "main_product_x96HHn",
     "hero_8GPV4R"
   ]
 }
