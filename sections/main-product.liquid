@@ -1,519 +1,222 @@
-{% if section.index == 1 %}
-  {{ 'main-product.css' | asset_url | stylesheet_tag }}
-{% endif %}
-
-{% liquid
-  assign choose_product = all_products[section.settings.choose_product]
-  if choose_product != blank
-    assign product = all_products[section.settings.choose_product]
-  endif
-%}
-
-{%  capture product_form %} 
-  {% render 'product-form', product: product %}
-{% endcapture %}
-
-  
-
-  {% comment %} <div class="container">
-    <h1>Responsive Swiper Slider</h1>
+<section class="uk-section uk-section-small">
+          <div class="uk-container">
+            <div class="uk-grid-medium uk-child-width-1-1 uk-grid" uk-grid="">
+              <div class="uk-text-center">
+                <ul class="uk-breadcrumb uk-flex-center uk-margin-remove">
+                  <li><a href="index.html">Home</a></li>
+                  <li><a href="catalog.html">Catalog</a></li>
+                  <li><a href="category.html">Laptops &amp; Tablets</a></li>
+                  <li><a href="subcategory.html">Laptops</a></li>
+                  <li><span>Apple MacBook Pro 15" Touch Bar MPTU2LL/A 256GB (Silver)</span></li>
+                </ul>
+                <h1 class="uk-margin-small-top uk-margin-remove-bottom">Apple MacBook Pro 15" Touch Bar MPTU2LL/A 256GB (Silver)</h1>
+              </div>
+              <div class="uk-grid-margin">
+                <div class="uk-grid-medium uk-child-width-1-1 uk-grid"">
+                  <div>
+                    <div class="uk-card uk-card-default uk-card-small tm-ignore-container">
+                      <div class="uk-grid-small uk-grid-collapse uk-grid-match uk-grid" uk-grid="">
+                        <div class="uk-width-1-1 uk-width-expand@m">
+                          <div class="uk-grid-collapse uk-child-width-1-1 uk-slideshow uk-grid" uk-slideshow="finite: true; ratio: 1:1;" uk-grid="">
+                            <div>
+                              <ul class="uk-slideshow-items" uk-lightbox="" style="aspect-ratio: 1 / 1; width: 100%;">
+                                {% for media in product.media %}
+                                <li><a class="uk-card-body tm-media-box tm-media-box-zoom" href="{{ media | image_url: width: 2048 }}">
+                                    <figure class="tm-media-box-wrap">
+                                        {% render 'image', 
+                                            image: media.preview_image,
+                                            image_class: "",
+                                            max_width: 800,
+                                            max_height: 800,
+                                            sizes: "(min-width: 1200px) 1200px, 100vw",
+                                            widths: "400, 600, 800",
+                                            loading: forloop.first ? 'eager' : 'lazy',
+                                            attributes: 'alt="{{ media.alt | default: product.title }}"',
+                                            fetchpriority: "high"
+                                        %}
+                                    </figure></a>
+                                </li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                            <div class="uk-grid-margin uk-first-column">
+                              <div class="uk-card-body uk-flex uk-flex-center">
+                                <div class="uk-width-1-2 uk-visible@s">
+                                  <div uk-slider="finite: true" class="uk-slider">
+                                    <div class="uk-position-relative">
+                                      <div class="uk-slider-container">
+                                        <ul class="tm-slider-items uk-slider-items uk-child-width-1-4 uk-grid uk-grid-small">
+                                            {% for media in product.media %}
+                                            <li uk-slideshow-item="{{ forloop.index0 }}">
+                                            <div class="tm-ratio tm-ratio-1-1"><a class="tm-media-box tm-media-box-frame">
+                                                <figure class="tm-media-box-wrap">
+                                                    {% render 'image', 
+                                                        image: media.preview_image,
+                                                        max_width: 200,
+                                                        max_height: 200,
+                                                        sizes: "100px",
+                                                        widths: "100, 150, 200",
+                                                        loading: 'lazy',
+                                                        attributes: 'alt="{{ media.alt | default: product.title }}"'
+                                                    %}
+                                                </figure></a></div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        <div><a class="uk-position-center-left-out uk-position-small uk-slidenav-previous uk-icon uk-slidenav" href="#" uk-slider-item="previous" uk-slidenav-previous="">
+                                        </a>
+                                        <a class="uk-position-center-right-out uk-position-small uk-slidenav-next uk-icon uk-slidenav" href="#" uk-slider-item="next" uk-slidenav-next="">
+                                        </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <ul class="uk-slideshow-nav uk-dotnav uk-hidden@s"></ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="uk-width-1-1 uk-width-1-3@m tm-product-info">
+                          <div class="uk-card-body">
+                            <div class="uk-margin">
+                              <div class="uk-grid-small uk-grid" uk-grid="">
+                                <div class="uk-flex uk-flex-middle">
+                                  <ul class="uk-iconnav uk-margin-xsmall-bottom tm-rating">
+                                    
+                                    <li>
+                                        <span class="uk-text-warning" uk-icon="star">
+                                        </span>
+                                    </li>
+                                   <li>
+                                        <span class="uk-text-warning" uk-icon="star">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="uk-text-warning" uk-icon="star">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="uk-text-warning" uk-icon="star">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="uk-text-warning" uk-icon="star">
+                                        </span>
+                                    </li>
+                                  </ul>
+                                  <div class="uk-margin-xsmall-left"><a class="uk-text-meta js-scroll-to-description" href="#description" onclick="UIkit.switcher('.js-product-switcher').show(3);">(2)</a></div>
+                                </div>
     
-    <!-- Swiper -->
-    <div class="swiper mySwiper">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          <img src="https://spore-dev.myshopify.com/cdn/shop/files/Main_06a4fd1d-f1c2-4b1f-bc85-79722b63fb02_600x400.jpg" alt="Slide 1" class="slide-image" width="300" height="200">
-          <div class="slide-title">Product 1</div>
-          <div class="slide-description">This is a description for Product 1</div>
+                              </div>
+                            </div>
+                            <div class="uk-margin">
+                              <div class="uk-grid-medium uk-grid" uk-grid="">
+                                <div class="uk-first-column">
+                                  <div class="uk-text-small uk-margin-xsmall-bottom">Color</div>
+                                  <ul class="uk-subnav uk-subnav-pill tm-variations" uk-switcher="">
+                                    <li><a class="tm-variation-color" uk-tooltip="Space Grey">
+                                        <div style="background-color: #aaaeb1"></div></a>
+                                    </li>
+                                    <li><a class="tm-variation-color" uk-tooltip="Silver">
+                                        <div style="background-color: #dddfde"></div></a>
+                                    </li>
+                                  </ul>
+                                </div>
+                                <div>
+                                  <div class="uk-text-small uk-margin-xsmall-bottom">SSD Storage</div>
+                                  <ul class="uk-subnav uk-subnav-pill tm-variations" uk-switcher="">
+                                    <li><a>256 GB</a>
+                                    </li>
+                                    <li><a>512 GB</a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="uk-margin">
+                              <div class="uk-padding-small uk-background-primary-lighten uk-border-rounded">
+                                <div class="uk-grid-small uk-child-width-1-1 uk-grid" uk-grid="">
+                                  <div>
+                                    <del class="uk-text-meta">$1899.00</del>
+                                    <div class="tm-product-price">$1599.00</div>
+                                  </div>
+                                  <div>
+                                    <div class="uk-grid-small uk-grid" uk-grid="">
+                                      <div>
+                                        <a onclick="increment(-1, 'product-1')" uk-icon="icon: minus; ratio: .75" class="uk-icon">
+                                            <svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="minus"><rect height="1" width="18" y="9" x="1"></rect></svg>
+                                        </a>
+                                        <input class="uk-input tm-quantity-input" id="product-1" type="text" maxlength="3" value="1">
+                                        <a onclick="increment(+1, 'product-1')" uk-icon="icon: plus; ratio: .75" class="uk-icon"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="plus"><rect x="9" y="1" width="1" height="17"></rect><rect x="1" y="9" width="17" height="1"></rect></svg></a>
+                                      </div>
+                                      <div>
+                                        <button class="uk-button uk-button-primary tm-product-add-button tm-shine js-add-to-cart">add to cart</button>
+                                      </div>
+                                      <div class="uk-width-auto uk-width-expand@s uk-flex uk-flex-middle uk-text-meta">
+                                        <a class="uk-margin-small-right js-add-to js-add-to-favorites tm-action-button-active js-added-to" uk-tooltip="Add to favorites" title="" aria-expanded="false"><span uk-icon="heart" class="uk-icon">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="heart"><path fill="none" stroke="#000" stroke-width="1.03" d="M10,4 C10,4 8.1,2 5.74,2 C3.38,2 1,3.55 1,6.73 C1,8.84 2.67,10.44 2.67,10.44 L10,18 L17.33,10.44 C17.33,10.44 19,8.84 19,6.73 C19,3.55 16.62,2 14.26,2 C11.9,2 10,4 10,4 L10,4 Z"></path></svg></span></a><a class="js-add-to js-add-to-compare tm-action-button-active js-added-to" uk-tooltip="Add to compare" title="" aria-expanded="false"><span uk-icon="copy" class="uk-icon"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="copy"><rect fill="none" stroke="#000" x="3.5" y="2.5" width="12" height="16"></rect><polyline fill="none" stroke="#000" points="5 0.5 17.5 0.5 17.5 17"></polyline></svg></span>
+                                        </a>
+                                    </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="uk-margin">
+                              <div class="uk-padding-small uk-background-muted uk-border-rounded">
+                                <div class="uk-grid-small uk-child-width-1-1 uk-text-small" uk-grid="">
+                                  <div>
+                                    <div class="uk-grid-collapse uk-grid" uk-grid=""><span class="uk-margin-xsmall-right uk-icon uk-first-column" uk-icon="cart"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="cart"><circle cx="7.3" cy="17.3" r="1.4"></circle><circle cx="13.3" cy="17.3" r="1.4"></circle><polyline fill="none" stroke="#000" points="0 2 3.2 4 5.3 12.5 16 12.5 18 6.5 8 6.5"></polyline></svg></span>
+                                      <div>
+                                        <div class="uk-text-bolder">Delivery</div>
+                                        <div class="uk-text-xsmall uk-text-muted">In stock, free, tomorrow</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="uk-grid-margin">
+                                    <div class="uk-grid-collapse uk-grid" uk-grid=""><span class="uk-margin-xsmall-right uk-icon uk-first-column" uk-icon="location"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="location"><path fill="none" stroke="#000" stroke-width="1.01" d="M10,0.5 C6.41,0.5 3.5,3.39 3.5,6.98 C3.5,11.83 10,19 10,19 C10,19 16.5,11.83 16.5,6.98 C16.5,3.39 13.59,0.5 10,0.5 L10,0.5 Z"></path><circle fill="none" stroke="#000" cx="10" cy="6.8" r="2.3"></circle></svg></span>
+                                      <div>
+                                        <div class="uk-text-bolder">Pick up from store</div>
+                                        <div class="uk-text-xsmall uk-text-muted">In stock, free, tomorrow</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="uk-margin">
+                              <ul class="uk-list uk-text-small uk-margin-remove">
+                                <li><span class="uk-text-muted">Diagonal display: </span><span>15.4"</span></li>
+                                <li><span class="uk-text-muted">CPU: </span><span>Intel®&nbsp;Core™ i7</span></li>
+                                <li><span class="uk-text-muted">RAM: </span><span>16&nbsp;GB</span></li>
+                                <li><span class="uk-text-muted">Video Card: </span><span>AMD Radeon Pro 555</span></li>
+                              </ul>
+                              <div class="uk-margin-small-top"><a class="uk-link-heading js-scroll-to-description" href="#description" onclick="UIkit.switcher('.js-product-switcher').show(1);"><span class="tm-pseudo">Detailed specifications</span><span class="uk-margin-xsmall-left uk-icon" uk-icon="icon: chevron-down; ratio: .75;"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="chevron-down"><polyline fill="none" stroke="#000" stroke-width="1.03" points="16 7 10 13 4 7"></polyline></svg></span></a></div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
         </div>
-        <div class="swiper-slide">
-          <img src="https://spore-dev.myshopify.com/cdn/shop/files/Main_06a4fd1d-f1c2-4b1f-bc85-79722b63fb02_600x400.jpg" alt="Slide 2" class="slide-image" width="300" height="200">
-          <div class="slide-title">Product 2</div>
-          <div class="slide-description">This is a description for Product 2</div>
-        </div>
-        <div class="swiper-slide">
-          <img src="https://spore-dev.myshopify.com/cdn/shop/files/Main_06a4fd1d-f1c2-4b1f-bc85-79722b63fb02_600x400.jpg" alt="Slide 3" class="slide-image" width="300" height="200">
-          <div class="slide-title">Product 3</div>
-          <div class="slide-description">This is a description for Product 3</div>
-        </div>
-        <div class="swiper-slide">
-          <img src="https://spore-dev.myshopify.com/cdn/shop/files/Main_06a4fd1d-f1c2-4b1f-bc85-79722b63fb02_600x400.jpg" alt="Slide 4" class="slide-image" width="300" height="200">
-          <div class="slide-title">Product 4</div>
-          <div class="slide-description">This is a description for Product 4</div>
-        </div>
-        <div class="swiper-slide">
-          <img src="https://spore-dev.myshopify.com/cdn/shop/files/Main_06a4fd1d-f1c2-4b1f-bc85-79722b63fb02_600x400.jpg" alt="Slide 5" class="slide-image" width="300" height="200">
-          <div class="slide-title">Product 5</div>
-          <div class="slide-description">This is a description for Product 5</div>
-        </div>
-        <div class="swiper-slide">
-          <img src="https://spore-dev.myshopify.com/cdn/shop/files/Main_06a4fd1d-f1c2-4b1f-bc85-79722b63fb02_600x400.jpg" alt="Slide 6" class="slide-image" width="300" height="200">
-          <div class="slide-title">Product 6</div>
-          <div class="slide-description">This is a description for Product 6</div>
-        </div>
-        <div class="swiper-slide">
-          <img src="https://spore-dev.myshopify.com/cdn/shop/files/Main_06a4fd1d-f1c2-4b1f-bc85-79722b63fb02_600x400.jpg" alt="Slide 7" class="slide-image" width="300" height="200">
-          <div class="slide-title">Product 7</div>
-          <div class="slide-description">This is a description for Product 7</div>
-        </div>
-        <div class="swiper-slide">
-          <img src="https://spore-dev.myshopify.com/cdn/shop/files/Main_06a4fd1d-f1c2-4b1f-bc85-79722b63fb02_600x400.jpg" alt="Slide 8" class="slide-image" width="300" height="200">
-          <div class="slide-title">Product 8</div>
-          <div class="slide-description">This is a description for Product 8</div>
-        </div>
-      </div>
-      
-     <div class="swiper-pagination"></div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
-    </div>
-  </div> {% endcomment %}
+        </div>    
+        </section>
 
-  <button class="uk-button uk-button-default demo" type="button" onclick="UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Message with an icon'})">With icon</button>
+        <script>
+            // Increment
+            function increment(incrementor, target) {
+                var value = parseInt(document.getElementById(target).value, 10);
+                value = isNaN(value) ? 0 : value;
 
-<div class="main-product-section-{{ section.id }} space-{{ section.settings.space }}" webite-section-main-product>
-  <div class="product-wrapper page-width uk-grid uk-child-width-1-2@s" uk-grid>
-    
-  <!-- Product Gallery -->
-    <div class="gallery-wrapper">
-      <div id="gallery--placeholder">
-          {% if section.index == 1 %}
-            {{ product.images[0] | image_url: width: 1200 | image_tag: widths: '200, 300, 320, 425, 500, 600, 800, 900, 1024', class:'pdp__image', preload: true }}
-          {% else %}
-              {{ product.images[0] | image_url: width: 1200 | image_tag: widths: '200, 300, 320, 425, 500, 600, 800, 900, 1024', class:'pdp__image', loading: 'lazy' }}
-          {% endif %}
-      </div>
-      
-      <div hidden id="gallery--real" class="gallery-top swiffy-slider  slider-nav-nodelay slider-nav-animation slider-nav-mousedrag">
-        <ul class="slider-container">
-         
-         {% for image in product.images %}
-            <li id="slide{{ forloop.index }}">
-              {% comment %} {{ image | image_url: width: 832, height: 1200, crop: 'center' | image_tag: preload: true }} {% endcomment %}
-            </li>
-          {% endfor %}
-        </ul>
-        <button type="button" class="slider-nav" aria-label="Go previous"></button>
-        <button type="button" class="slider-nav slider-nav-next" aria-label="Go next"></button>
-      </div> 
-      
-      {% comment %}<div id="gallery--thumbs" class="small-hide">
-        <ul class="uk-flex">
-          {% for image in product.images %}
-            <li>
-              <a href="#">
-                <img
-                        alt="{{ image.alt | escape }}"
-                        class="pdp__image--thumb{% if forloop.index0 == 0 %} active-thumb{% endif %}"
-                        src="{{ image | img_url: '128x128', crop: 'center' }}"
-                        width="64"
-                        height="64"
-                        data-id="{% for variant in image.variants %}{{ variant.id }},{% endfor %}"
-                        data-index="{{ forloop.index }}"
-                        loading="lazy"
-                        onclick="thumbHover({{ forloop.index0 }})"
-                        id="pdp__image--thumb{{ forloop.index0 }}"
-                >
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-        <button type="button" class="slider-nav" aria-label="Go previous"></button>
-        <button type="button" class="slider-nav slider-nav-next" aria-label="Go next"></button>
-      </div>{% endcomment %}
-    </div>
-
-    <script>
-      function thumbHover(imageNumber) {
-        //Find the slider element
-        const sliderElement = document.getElementById('gallery--real');
-        const thisThumb = document.getElementById('pdp__image--thumb'+imageNumber);
-        const allThumbs = document.querySelectorAll('.pdp__image--thumb');
-        allThumbs.forEach((thumb)=> {
-          thumb.classList.remove('active-thumb');
-        });
-        thisThumb.classList.add('active-thumb');
-        //Slide to he right image
-        swiffyslider.slideTo(sliderElement, imageNumber)
-      }
-    </script>
-
-  <!-- Product info with blocks -->
-    <div class="product-info">
-    {%- for block in section.blocks -%}
-      {%- case block.type -%}
-        {%- when '@app' -%}
-          {% render block %}
-        {%- when 'title' -%}
-          <p class="product-info__heading item-padding-top_small">{{ product.title }}</p>
-          {%- when 'text' -%}
-            <div>{{ block.settings.rich_text_content}}</div>
-          {%- when 'small_description' -%}
-            {% if product.metafields.custom.small_description  %}<div class="item-padding-top_small">{{product.metafields.custom.small_description | metafield_tag}}</div>{% endif %}
-          {%- when 'whats_inside' -%}
-          {% if product.metafields.custom.whats_inside  %}<div>{{product.metafields.custom.whats_inside | metafield_tag}}</div>{% endif %}
-          {%- when 'featured_icons' -%}
-            {% if product.metafields.custom.featured_icons  %}
-              <ul class="product-info__featured-icons item-padding-top">
-              {% for image in product.metafields.custom.featured_icons.value %}
-                <li class="product-info__featured-icons__item"><img src="{{ image | img_url: '90x97', crop: 'center' }}" alt="{{ image.alt }}" width="90" /></li>
-              {% endfor %}
-              </ul>
-          {% endif %}
-          {%- when 'product_form' -%}
-              {{ product_form }}
-        {%- endcase -%}
-      {%- endfor -%}
-    </div>
-
-  </div>
-</div>
-
-<!-- Custom section script -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-
-      var mainProduct = document.querySelector('.main-product-section-{{ section.id }}');
-
-    //custom select
-    const customSelects = mainProduct.querySelectorAll('.custom-select');
-    customSelects.forEach(select => {
-      const selectedOption = select.querySelector('.custom-select__selected-option');
-      const optionsContainer = select.querySelector('.custom-select__variant-options');
-      const options = select.querySelectorAll('.custom-select__variant-option');
-
-      selectedOption.addEventListener('click', () => {
-        optionsContainer.style.display = optionsContainer.style.display === 'block' ? 'none' : 'block';
-      });
-
-      options.forEach(option => {
-        option.addEventListener('click', () => {
-          selectedOption.textContent = option.textContent;
-          optionsContainer.style.display = 'none';
-          options.forEach(opt => opt.classList.remove('selected'));
-          option.classList.add('selected');
-          updateVariantDetails();
-        });
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!select.contains(e.target)) {
-          optionsContainer.style.display = 'none';
-        }
-      });
-    });
-    
-    // Get all variant selectors
-    const optionSelectors = mainProduct.querySelectorAll('.variant-select, .color-option, .custom-select__variant-option');
-    const imageElement = mainProduct.querySelector('.gallery-top img');
-    const variantIdField = mainProduct.querySelector('.selected-variant-id');
-
-    // Get product variants from a Liquid variable
-    const productVariants = {{ product.variants | json }};
-
-    // Find matcing variant based on selected options
-    const findMatchingVariant = () => {
-      const selectedOptions = Array.from(optionSelectors).map(selector => {
-        if (selector.type === 'radio' && selector.checked ) {
-          return selector.value;
-        } else if (selector.type !== 'radio' && selector.classList.contains('selected')) {
-          return selector.getAttribute('data-value');
-        } else {
-          return null;
-        }
-      }).filter(value => value !== null);
-
-      // Ensure all selected options are collected
-      if (selectedOptions.includes(undefined) || selectedOptions.includes('')) {
-        console.warn('Not all options are selected.');
-        return null;
-      }
-
-      return productVariants.find(variant =>
-          variant.options.every((option, index) => option === selectedOptions[index])
-      );
-    };
-
-    // Function to convert and update the price
-    function updatePrice(priceInCents) {
-      const priceElements = mainProduct.querySelectorAll('.current-price');
-      const convertedPrice = formatMoney(priceInCents, '{{ shop.money_format }}');
-      if(priceElements) {
-        priceElements.forEach(priceElement => {
-          priceElement.innerHTML = convertedPrice;
-        });
-      }
-    }
-
-    function compareAtPrice(priceInCents) {
-      const compareAtPriceElements = mainProduct.querySelectorAll('.compare-at-price');
-      const convertedCompareAtPrice = formatMoney(priceInCents, '{{ shop.money_format }}');
-      if(compareAtPriceElements) {
-        compareAtPriceElements.forEach(compareAtPriceElement => {
-          compareAtPriceElement.innerHTML = convertedCompareAtPrice;
-        });
-      }
-    }
-
-    const updateVariantDetails = () => {
-      const matchingVariant = findMatchingVariant();
-      const compareAtPriceElements = mainProduct.querySelectorAll('.compare-at-price');
-      if (matchingVariant && matchingVariant.featured_image) {
-        // Update the price
-        updatePrice(matchingVariant.price);
-        if(compareAtPriceElements) {
-          if (matchingVariant.compare_at_price > matchingVariant.price) {
-            compareAtPrice(matchingVariant.compare_at_price);
-            compareAtPriceElements.forEach(compareAtPriceElement => {
-              compareAtPriceElement.style.display = 'inline';
-            });
-          } else {
-            compareAtPriceElements.forEach(compareAtPriceElement => {
-              compareAtPriceElement.style.display = 'none';
-            });
-          }
-        }
-
-        // Update the image
-        const matchingImageSrc = matchingVariant.featured_image.src;
-        imageElement.src = matchingImageSrc;
-
-        // Find the gallery image associated with this variant
-        const element = Array.from(mainProduct.querySelectorAll('.gallery-top img')).find(el => el.src === matchingImageSrc);
-
-        // Update galleryTop to slide to the index of the variant image
-        if (element) {
-          const parentSlide = element.closest('.swiper-slide');
-          if (parentSlide) {
-          const index = Array.prototype.indexOf.call(parentSlide.parentNode.children, parentSlide);
-          galleryTop.slideTo(index);
-          }
-        }
-
-        // Update the hidden input for the variant ID
-        variantIdField.value = matchingVariant ? matchingVariant.id : '';
-
-          // Check if the variant is in stock
-          const outOfStockMessages = mainProduct.querySelectorAll('.out-of-stock-message');
-          const addToCartButton = mainProduct.querySelector('button[type="submit"]');
-    
-          if (matchingVariant && matchingVariant.available) {
-            outOfStockMessages.forEach(message => message.style.display = 'none');
-            addToCartButton.disabled = false;
-          } else {
-            outOfStockMessages.forEach(message => message.style.display = 'block');
-            addToCartButton.disabled = true;
-          }
-      } else {
-        // Handle cases where no valid variant matches the selection
-        console.warn('No matching variant found for selected options.');
-        variantIdField.value = '';
-      }
-    }
-
-    // Add event listeners to color swatches
-    const colorSwatches = mainProduct.querySelectorAll('.color-swatch');
-
-    colorSwatches.forEach(colorSwatch => {
-      colorSwatch.addEventListener('click', event => {
-        const value = event.target.getAttribute('data-value');
-        const radio = mainProduct.querySelector(`.color-option[value="${value}"]`);
-        radio.checked = true;
-
-        // Remove 'active' class from all color swatches
-        colorSwatches.forEach(swatch => swatch.classList.remove('active'));
-
-        // Add 'active' class to the clicked color swatch
-        event.target.classList.add('active');
-
-        // Find the gallery image associated with this variant
-        const element = Array.from(mainProduct.querySelectorAll('.gallery-top img'))
-          .find(el => el.getAttribute('data-variant-color') === value);
-
-        // If a matching image exists, update galleryTop to slide to the index of the variant image
-        // if (element) {
-        //   const parentSlide = element.closest('.swiper-slide');
-        //   if (parentSlide) {
-        //     const index = Array.prototype.indexOf.call(parentSlide.parentNode.children, parentSlide);
-        //     galleryTop.slideTo(index);
-        //   }
-        // }
-
-        // Trigger change event on the hidden radio input
-        radio.dispatchEvent(new Event('change', { bubbles: true }));
-      });
-    });
-
-    // Add event listeners to all dropdowns and hidden radio inputs
-    optionSelectors.forEach(selector => {
-      selector.addEventListener('change', updateVariantDetails);
-    });
-
-    // Add event listeners to custom variant options
-    const variantOptions = mainProduct.querySelectorAll('.custom-select__variant-option');
-    variantOptions.forEach(option => {
-      option.addEventListener('click', event => {
-        const optionName = event.target.closest('.custom-select__variant-options').getAttribute('data-option-name');
-        const value = event.target.getAttribute('data-value');
-
-        // Deselect all options for this variant
-        mainProduct.querySelectorAll(`.custom-select__variant-options[data-option-name="${optionName}"] .custom-select__variant-option`).forEach(opt => {
-          opt.classList.remove('selected');
-        });
-
-        // Select the clicked option
-        event.target.classList.add('selected');
-
-        // Trigger change event
-        updateVariantDetails();
-      });
-    });
-
-    // Quantity increment and decrement
-    mainProduct.querySelector('.quantity__increment').addEventListener('click', function () {
-      var input = mainProduct.querySelector('.quantity__input');
-      input.value = formatNumber(parseInt(input.value, 10) + 1);
-    });
-
-    mainProduct.querySelector('.quantity__decrement').addEventListener('click', function () {
-      var input = mainProduct.querySelector('.quantity__input');
-      input.value = formatNumber(Math.max(parseInt(input.value, 10) - 1, 1));
-    });
-
-    // Format number to have leading zero, like we have on a design
-    function formatNumber(number) {
-      return number < 10 ? '0' + number : number;
-    }
-  });
-</script>
-
-{% schema %}
-{
-  "name": "Product",
-  "tag": "section",
-  "class": "main-product",
-  "settings": [
-    {
-      "type": "select",
-      "id": "space",
-      "options": [
-        {
-          "value": "both",
-          "label": "Top and bottom"
-        },
-        {
-          "value": "both_small",
-          "label": "Top and bottom small"
-        },
-        {
-          "value": "top",
-          "label": "Top"
-        },
-        {
-          "value": "top_small",
-          "label": "Top small"
-        },
-        {
-          "value": "bottom",
-          "label": "Bottom"
-        },
-        {
-          "value": "bottom_small",
-          "label": "Bottom small"
-        }
-      ],
-      "default": "both",
-      "label": "Section Padding"
-    },
-    {
-      "type": "product",
-      "id": "choose_product",
-      "label": "Product",
-      "info": "If section is used on product page and you want to show the product that is currently being viewed, leave this field empty."
-    }
-  ],
-  "blocks": [
-    {
-      "type": "@app"
-    },
-    {
-      "name": "Title",
-      "type": "title",
-      "settings": [
-      ]
-    },
-    {
-      "name": "Rich Text",
-      "type": "text",
-      "settings": [
-        {
-          "type": "richtext",
-          "id": "rich_text_content",
-          "label": "Rich Text Content"
-        }
-      ]
-    },
-    {
-      "name": "Small Description",
-      "type": "small_description",
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "Go to individial product page and populate Small Description metafield."
-        }
-      ]
-    },
-    {
-      "name": "What's Inside",
-      "type": "whats_inside",
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "Go to individial product page and populate What's Inside metafield."
-        }
-      ]
-    },
-    {
-      "name": "Featured Icons",
-      "type": "featured_icons",
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "Go to individial product page and populate Featured Icons metafield."
-        }
-      ]
-    },
-    {
-      "name": "Product Form",
-      "type": "product_form",
-      "settings": [
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Product",
-      "blocks": [
-        {
-          "type": "title"
-        },
-        {
-          "type": "small_description"
-        },
-        {
-          "type": "whats_inside"
-        },
-        {
-          "type": "product_form"
-        },
-        {
-          "type": "featured_icons"
-        }
-      ]
-    }
-  ],
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  }
-}
-{% endschema %}
+                if (incrementor < 0 && value > 1) {
+                    value += incrementor;
+                } else {
+                    value += incrementor;
+                }
+                document.getElementById(target).value = value;
+            } 
+        </script>

@@ -1,15 +1,82 @@
 {
-  "cart": {
-    "quantity": "Quantity:",
-    "price": "Price:",
-    "total": "Total:"
+  "general": {
+    "accessibility": {
+
+    },
+    "blog": {
+
+    },
+    "contact_form": {
+
+    },
+    "search": {
+   
+    },
+    "wishlist": {
+   
+    },
+    "recently_viewed": {
+
+    },
+    "newsletter": {
+
+    },
+    "404_page": {
+
+    },
+    "times": {
+      "ago": "ago",
+      "moments": "moments",
+      "second": "second",
+      "seconds": "seconds",
+      "minute": "minute",
+      "minutes": "minutes",
+      "hour": "hour",
+      "hours": "hours",
+      "day": "day",
+      "days": "days",
+      "expired": "Offer has expired!"
+    },
+    "localization": {
+      "title": "Localization"
+    },
+    "payment_icons": {
+
+    },
+    "password_page": {
+      "input_label": "Password",
+      "btn_label": "Enter"
+    }
+  },
+  "collection": {
+    "count_products": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    },
+    "filters": {
+      "btn_text": "Filters",
+      "title": "Filters",
+      "reset": "Reset",
+      "from": "From",
+      "to": "To",
+      "view_more": "View more",
+      "clear_filter": "Clear filter",
+      "clear_all": "Clear all filters",
+      "view_results": {
+        "one": "View {{ count }} product",
+        "other": "View {{ count }} products"
+      }
+    }
   },
   "product": {
-    "choose_your_option": "Choose your",
-    "add_to_cart_button_message" :"Free US Shipping over $65 | Free US Returns",
-    "add_to_cart_button_text": "Add to Cart",
-    "add_to_cart_button_soldout": "This variant is currently out of stock.",
-    "added_notification": "ADDED!",
-    "view_cart": "View Cart"
+    
+  },
+  "cart": {
+   
+  },
+  "sections": {
+    "featured_blog": {
+      "onboarding_title": "Please select a blog in the section settings"
+    }
   }
 }

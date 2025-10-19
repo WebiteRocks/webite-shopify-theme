@@ -7,6 +7,7 @@
     <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com/">
     <link rel="dns-prefetch" href="https://www.google-analytics.com/">
     {%- if settings.favicon != blank -%}
@@ -32,6 +33,8 @@
     {% comment %} {% include 'css-vars' %} {% endcomment %}
     {% comment %} {{ 'main.css' | asset_url | stylesheet_tag: preload: boolean }} {% endcomment %}
     {{ 'style.css' | asset_url | stylesheet_tag: preload: true }}
+    {% comment %} {{ 'uikit.min.js' | asset_url | script_tag }} {% endcomment %}
+    <script src="{{ 'uikit.min.js' | asset_url }}" defer></script>
   </head>
 
   <body>
@@ -77,9 +80,9 @@
 
       function loadScript() {
         if (!scriptLoaded) {
-          const customScript = document.createElement('script');
+          {% comment %} const customScript = document.createElement('script');
           customScript.src = "{{ 'uikit.min.js' | asset_url | replace :'/', '\/' }}";
-          document.head.appendChild(customScript);
+          document.head.appendChild(customScript); {% endcomment %}
 
           // const swiperScript = document.createElement('script');
           // swiperScript.src = "{{ 'swiper-bundle.min.js' | asset_url | replace :'/', '\/' }}";
@@ -189,6 +192,7 @@
 
     </script>
     {% endcomment %}
-    {% comment %} {{ 'uikit.min.js' | asset_url | script_tag }} {% endcomment %}
+    <!-- Shopify money for all currencies -->
+    <script src="{{ 'shopify-money.js' |  asset_url }}"></script>
   </body>
 </html>

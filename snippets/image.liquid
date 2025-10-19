@@ -1,0 +1,64 @@
+{%- comment -%}
+  Renders a responsive image
+
+  Accepts:
+  - image: {Object} Image object from a product, collection, article, etc.
+  - image_class: {String} CSS class for the image (optional)
+  - max_width: {Number} Max width for the image (defaults to original image width)
+  - max_height: {Number} Max height for the image (defaults to original image height)
+  - sizes: {String} Sizes attribute for the image (defaults to "100vw")
+  - widths: {String} Comma-separated list of widths for srcset (e.g. "400, 600, 800, 1000, 1200")
+  - loading: {String} Loading strategy: "lazy" (default) or "eager"
+  - attributes: {String} Any additional HTML attributes to include on the image tag
+
+  Usage:
+  {% render 'image', image: product.featured_image,
+      image_class: "product-featured-image",
+      sizes: "(min-width: 768px) 50vw, 100vw",
+      widths: "400, 600, 800, 1000, 1200",
+      loading: "lazy"
+  %}
+{%- endcomment -%}
+
+{%- if image != blank -%}
+  {%- liquid
+    assign sizes = sizes | default: '100vw'
+    
+    if max_width == blank
+      assign max_width = image.width
+    endif
+    
+    if max_height == blank
+      assign max_height = image.height
+    endif
+    
+    if widths == blank
+      assign widths = '360, 540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2160, 2376, 2592, 2808, 3024'
+    endif
+  
+    assign widths_array = widths | split: ', ' | join: ',' | split: ','
+  -%}
+  
+  {%- capture srcset -%}
+    {%- for width in widths_array -%}
+      {%- assign width_num = width | plus: 0 -%}
+      {%- if width_num <= max_width -%}
+        {{ image | image_url: width: width_num }} {{ width_num }}w{% unless forloop.last %}, {% endunless %}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  <img
+    class="{{ image_class }}"
+    src="{{ image | image_url: width: max_width }}"
+    srcset="{{ srcset }}"
+    sizes="{{ sizes }}"
+    width="{{ max_width }}"
+    height="{{ max_height }}"
+    loading="{{ loading | default: 'lazy' }}"
+    {% if loading == 'eager' %}fetchpriority="high"{% endif %}
+    decoding="async"
+    alt="{{ image.alt | escape }}"
+    {{ attributes }}
+  >
+{%- endif -%}
