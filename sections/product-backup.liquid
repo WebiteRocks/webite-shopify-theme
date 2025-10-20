@@ -1,0 +1,213 @@
+{% comment %}
+  This section is used in the product template to render product page with
+  media, content, and add-to-cart form.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+{% endcomment %}
+{{ 'product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'variant-picker.js' | asset_url }}" defer></script>
+<script src="{{ 'quantity-selector.js' | asset_url }}" defer></script>
+
+<section class="uk-section uk-section-default">
+  <div class="uk-container">
+    <div class="uk-grid uk-grid-large uk-child-width-1-1 uk-child-width-1-2@m" uk-grid>
+      <div>
+        <div class="uk-card uk-card-default uk-card-body uk-padding-remove product-images">
+          {%- if product.has_only_default_variant -%}
+            {% render 'image', 
+                image: product.featured_image,
+                image_class: "uk-width-1-1 uk-border-rounded product-image",
+                max_width: 1000,
+                max_height: 1000,
+                sizes: "(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw",
+                widths: "400, 600, 800, 1000",
+                loading: 'eager',
+                attributes: 'alt="{{ product.title }}"'
+            %}
+          {%- else -%}
+            {% render 'image', 
+                image: product.selected_or_first_available_variant.image,
+                image_class: "uk-width-1-1 uk-border-rounded product-image",
+                max_width: 1000,
+                max_height: 1000,
+                sizes: "(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw",
+                widths: "400, 600, 800, 1000",
+                loading: 'eager',
+                attributes: 'alt="{{ product.title }}"'
+            %}
+          {%- endif -%}
+        </div>
+      </div>
+      <div>
+        <div class="uk-card uk-card-default uk-card-body">
+        {% form 'product', product, class: 'uk-form-stacked' %}
+          <div class="uk-grid uk-grid-medium uk-child-width-1-1 product-content" uk-grid>
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'title' %}
+              <div>
+                <h1 class="uk-heading-small uk-margin-remove-top">{{ product.title }}</h1>
+              </div>
+
+            {% when 'price' %}
+              <div>
+                <div class="uk-flex uk-flex-middle uk-grid-small" uk-grid>
+                  {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+                    <div class="uk-width-auto">
+                      <span class="uk-text-large uk-text-bold uk-text-danger">{{ product.selected_or_first_available_variant.price | money }}</span>
+                    </div>
+                    <div class="uk-width-auto">
+                      <span class="uk-text-muted uk-text-decoration-line-through">{{ product.selected_or_first_available_variant.compare_at_price | money }}</span>
+                    </div>
+                  {% else %}
+                    <div class="uk-width-auto">
+                      <span class="uk-text-large uk-text-bold">{{ product.selected_or_first_available_variant.price | money }}</span>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+            {% when 'inventory' %}
+              <div>
+                <span class="uk-text-small uk-text-muted">Inventory: {{ product.selected_or_first_available_variant.inventory_quantity }}</span>
+              </div>
+
+            {% when 'add_to_cart' %}
+              <div>
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button 
+                  type="submit" 
+                  class="uk-button uk-button-primary uk-button-large uk-width-1-1 {% unless product.selected_or_first_available_variant.available %}uk-disabled{% endunless %}"
+                  {% unless product.selected_or_first_available_variant.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {% if product.selected_or_first_available_variant.available %}
+                    Add to cart
+                  {% else %}
+                    Sold out
+                  {% endif %}
+                </button>
+              </div>
+
+            {%  when 'variant_picker' %}
+              <div>
+                {%- unless product.has_only_default_variant -%}
+                  <variant-selector class="uk-margin-medium-bottom product-content__variants" data-section-id="{{ section.id }}">
+                    {% for option in product.options_with_values %}
+                      <fieldset class="uk-fieldset uk-margin">
+                        <legend class="uk-legend uk-text-bold">
+                          {{ option.name }}
+                        </legend>
+                        <div class="uk-grid uk-grid-small uk-child-width-auto" uk-grid>
+                          {% for value in option.values %}
+                            {% if option.name == "Color" %}
+                              <div>
+                                {% if value.swatch.color %}
+                                  <input id="{{ option.name }}-{{ value }}" type="radio" name="{{ option.name }}" value="{{ value.variant.id }}" {% if option.selected_value == value %}checked{% endif %} class="uk-radio uk-hidden">
+                                  <label for="{{ option.name }}-{{ value }}" class="uk-button uk-button-default uk-border-rounded color-swatch {% unless value.variant.available %}uk-disabled{% endunless %}" style="background-color: {{ value.swatch.color }}; width: 40px; height: 40px; padding: 0;"></label>
+                                {% else %}
+                                  <input id="{{ option.name }}-{{ value }}" type="radio" name="{{ option.name }}" value="{{ value.variant.id }}" {% if option.selected_value == value %}checked{% endif %} class="uk-radio uk-hidden">
+                                  <label for="{{ option.name }}-{{ value }}" class="uk-button uk-button-default uk-border-rounded color-swatch {% unless value.variant.available %}uk-disabled{% endunless %}" style="background-image: url({{ value.swatch.image | image_url: width: 100 }}); width: 40px; height: 40px; padding: 0; background-size: cover;"></label>
+                                {% endif %}
+                              </div>
+                            {% else %}
+                              <div>
+                                <input id="{{ option.name }}-{{ value }}" type="radio" name="{{ option.name }}" value="{{ value.variant.id }}" {% if option.selected_value == value %}checked{% endif %} class="uk-radio uk-hidden">
+                                <label for="{{ option.name }}-{{ value }}" class="uk-button uk-button-default {% unless value.variant.available %}uk-disabled{% endunless %}">{{ value }}</label>
+                              </div>
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                    </fieldset>
+                  {% endfor %}
+                </variant-selector>
+              {%- endunless -%}
+              </div>
+
+            {% when 'quantity_selector' %}
+              <div>
+                {% comment %} 
+                  This is not part of the video but I added it to the project to make the quantity selector work with the variant picker.
+                  Be ware though that this is not a production ready solution and may not work for all cases. 
+                {% endcomment %}
+  
+                <quantity-selector class="uk-flex uk-flex-middle uk-grid-small quantity-selector" uk-grid data-max="{{ product.selected_or_first_available_variant.inventory_quantity }}">
+                  <div class="uk-width-auto">
+                    <button type="button" class="uk-button uk-button-default quantity-selector__button" data-quantity-minus>-</button>
+                  </div>
+                  <div class="uk-width-auto">
+                    <span class="uk-text-bold uk-padding-small quantity-selector__value" data-quantity-display>1</span>
+                  </div>
+                  <div class="uk-width-auto">
+                    <button type="button" class="uk-button uk-button-default quantity-selector__button" data-quantity-plus>+</button>
+                  </div>
+                </quantity-selector>
+              </div>
+          {% endcase %} 
+        {% endfor %}
+          </div>
+        {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_payment_button",
+      "label": "Show payment button",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "name": "Title",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "settings": []
+    },
+    {
+      "type": "inventory",
+      "name": "Inventory",
+      "settings": []
+    },
+    {
+      "type": "add_to_cart",
+      "name": "Add to cart",
+      "settings": []
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "settings": []
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity selector",
+      "settings": []
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product"
+    }
+  ]
+}
+{% endschema %}

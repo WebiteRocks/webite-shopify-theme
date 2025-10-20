@@ -1,0 +1,108 @@
+/* BASE */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background-color: #fcd34d;
+  font-size: 1.6rem;
+  color: #000000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem;
+}
+
+/* BASE */
+
+.button {
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+  max-width: 250px;
+}
+
+.button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.text--highlight {
+  color: red;
+}
+
+.text--strike {
+  text-decoration: line-through;
+}
+
+.text--subdued {
+  opacity: 0.5;
+}
+
+/* PRODUCT - UIkit Compatible Styles */
+
+/* Color swatch specific styling */
+.color-swatch {
+  border: 2px solid transparent !important;
+  transition: all 0.2s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+}
+
+/* Checked state for color swatches */
+input[type="radio"]:checked + .color-swatch {
+  border-color: #1e87f0 !important;
+  box-shadow: 0 0 0 3px rgba(30, 135, 240, 0.3);
+}
+
+/* Checked state for regular variant buttons */
+input[type="radio"]:checked + .uk-button {
+  background-color: #1e87f0 !important;
+  color: white !important;
+  border-color: #1e87f0 !important;
+}
+
+/* Disabled variant styling */
+.uk-disabled {
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+}
+
+/* Quantity selector styling */
+quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Custom button overrides for product form */
+.uk-button-primary {
+  background-color: #fcd34d;
+  color: #000000;
+  border-color: #fcd34d;
+}
+
+.uk-button-primary:hover {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .uk-card-body {
+    padding: 1rem;
+  }
+  
+  .uk-heading-small {
+    font-size: 1.5rem;
+  }
+}
