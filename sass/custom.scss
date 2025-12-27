@@ -80,6 +80,12 @@
     height: 60px;
 }
 
+// Fix megamenu dropdown gap - remove default margin
+.tm-navbar-container .uk-navbar-dropdown {
+    margin-top: 0;
+    top: 100% !important;
+}
+
 //
 // Navbar button
 //
@@ -725,6 +731,44 @@
     text-align: center;
 }
 
+.tm-quantity-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    color: $global-muted-color;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid $global-border;
+    border-radius: $border-rounded-border-radius;
+    background: transparent;
+    padding: 0;
+    transition: 0.1s ease-in-out;
+    transition-property: color, background-color, border-color;
+    
+    &:hover {
+        color: $global-color;
+        border-color: darken($global-border, 10%);
+    }
+}
+
+// Action buttons (favorites, compare)
+.js-add-to {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+}
+
 //
 // Slidenav
 //
@@ -1113,4 +1157,40 @@
     &:hover {
         filter: none;
     }
+}
+
+//
+// Add to Cart Loading State
+//
+
+/* Make the "Add to cart" button look visually disabled while loading */
+ajax-cart-product-form[processing] [type="submit"] {
+  opacity: .7;
+  cursor: not-allowed;
+  pointer-events: none;
+  position: relative;
+  color: transparent !important;
+}
+
+/* Show UIkit-style loading spinner on the button */
+ajax-cart-product-form[processing] [type="submit"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: uk-spinner-rotate 0.8s linear infinite;
+  color: #fff;
+}
+
+/* Use UIkit's spinner rotation animation */
+@keyframes uk-spinner-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

@@ -3,35 +3,51 @@
     <div class="uk-navbar-left">
       <nav>
         <ul class="uk-navbar-nav">
-          <li><a href="#"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: receiver; ratio: .75;"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="receiver"><path fill="none" stroke="#000" stroke-width="1.01" d="M6.189,13.611C8.134,15.525 11.097,18.239 13.867,18.257C16.47,18.275 18.2,16.241 18.2,16.241L14.509,12.551L11.539,13.639L6.189,8.29L7.313,5.355L3.76,1.8C3.76,1.8 1.732,3.537 1.7,6.092C1.667,8.809 4.347,11.738 6.189,13.611"></path></svg></span><span class="tm-pseudo">8 800 799 99 99</span></a></li>
-          <li><a href="contacts.html" onclick="return false"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: location; ratio: .75;"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="location"><path fill="none" stroke="#000" stroke-width="1.01" d="M10,0.5 C6.41,0.5 3.5,3.39 3.5,6.98 C3.5,11.83 10,19 10,19 C10,19 16.5,11.83 16.5,6.98 C16.5,3.39 13.59,0.5 10,0.5 L10,0.5 Z"></path><circle fill="none" stroke="#000" cx="10" cy="6.8" r="2.3"></circle></svg></span><span class="tm-pseudo">Store in St. Petersburg</span><span uk-icon="icon: triangle-down; ratio: .75;" class="uk-icon"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="triangle-down"><polygon points="5 7 15 7 10 12"></polygon></svg></span></a>
+          {% if section.settings.show_phone and section.settings.phone != blank %}
+          <li><a href="tel:{{ section.settings.phone | remove: ' ' }}"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: receiver; ratio: .75;"></span><span class="tm-pseudo">{{ section.settings.phone }}</span></a></li>
+          {% endif %}
+          {% if section.settings.show_location %}
+          <li><a href="{{ section.settings.contact_page_url | default: '/pages/contact' }}" onclick="return false"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: location; ratio: .75;"></span><span class="tm-pseudo">{{ section.settings.location_label | default: shop.name }}</span><span uk-icon="icon: triangle-down; ratio: .75;" class="uk-icon"></span></a>
             <div class="uk-margin-remove uk-drop" uk-drop="mode: click; pos: bottom-center;">
               <div class="uk-card uk-card-default uk-card-small uk-box-shadow-xlarge uk-overflow-hidden uk-padding-small uk-padding-remove-horizontal uk-padding-remove-bottom">
                 <div class="uk-card-body">
                   <div class="uk-text-small">
-                    <div class="uk-text-bolder">Store Name</div>
-                    <div>St.&nbsp;Petersburg, Nevsky&nbsp;Prospect&nbsp;28</div>
-                    <div>Daily 10:00–22:00</div>
+                    {% if section.settings.store_name != blank %}
+                    <div class="uk-text-bolder">{{ section.settings.store_name }}</div>
+                    {% endif %}
+                    {% if section.settings.store_address != blank %}
+                    <div>{{ section.settings.store_address }}</div>
+                    {% endif %}
+                    {% if section.settings.store_hours != blank %}
+                    <div>{{ section.settings.store_hours }}</div>
+                    {% endif %}
                   </div>
-                  <div class="uk-margin-small"><a class="uk-link-muted uk-text-uppercase tm-link-to-all uk-link-reset" href="contacts.html"><span>contacts</span><span uk-icon="icon: chevron-right; ratio: .75;" class="uk-icon"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="chevron-right"><polyline fill="none" stroke="#000" stroke-width="1.03" points="7 4 13 10 7 16"></polyline></svg></span></a>
+                  {% if section.settings.contact_page_url != blank %}
+                  <div class="uk-margin-small"><a class="uk-link-muted uk-text-uppercase tm-link-to-all uk-link-reset" href="{{ section.settings.contact_page_url }}"><span>contacts</span><span uk-icon="icon: chevron-right; ratio: .75;" class="uk-icon"></span></a>
                   </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
           </li>
+          {% endif %}
+          {% if section.settings.show_hours and section.settings.store_hours != blank %}
           <li>
-            <div class="uk-navbar-item"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: clock; ratio: .75;"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="clock"><circle fill="none" stroke="#000" stroke-width="1.1" cx="10" cy="10" r="9"></circle><rect x="9" y="4" width="1" height="7"></rect><path fill="none" stroke="#000" stroke-width="1.1" d="M13.018,14.197 L9.445,10.625"></path></svg></span>Daily 10:00–22:00
+            <div class="uk-navbar-item"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: clock; ratio: .75;"></span>{{ section.settings.store_hours }}
             </div>
           </li>
+          {% endif %}
         </ul>
       </nav>
     </div>
     <div class="uk-navbar-right">
       <nav>
         <ul class="uk-navbar-nav">
-          <li><a href="news.html">News</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-          <li><a href="#">Payment</a></li>
+          {% if section.settings.menu != blank %}
+            {% for link in linklists[section.settings.menu].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% endif %}
         </ul>
       </nav>
     </div>
@@ -44,7 +60,78 @@
   "class": "section-announcement-bar",
   "tag": "section",
   "settings": [
-
+    {
+      "type": "header",
+      "content": "Contact Information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Show phone number",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number",
+      "default": "8 800 799 99 99"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_location",
+      "label": "Show location dropdown",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "location_label",
+      "label": "Location label",
+      "default": "Store Location"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hours",
+      "label": "Show hours in navbar",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Store Details (for dropdown)"
+    },
+    {
+      "type": "text",
+      "id": "store_name",
+      "label": "Store name",
+      "default": "Store Name"
+    },
+    {
+      "type": "text",
+      "id": "store_address",
+      "label": "Store address",
+      "default": "123 Main Street, City"
+    },
+    {
+      "type": "text",
+      "id": "store_hours",
+      "label": "Store hours",
+      "default": "Daily 10:00–22:00"
+    },
+    {
+      "type": "url",
+      "id": "contact_page_url",
+      "label": "Contact page link"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "footer",
+      "info": "Select a menu to display on the right side"
+    }
   ],
   "presets": [
     {

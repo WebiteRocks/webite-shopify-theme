@@ -10129,11 +10129,6 @@ iframe[data-uk-cover] {
   height: 60px;
 }
 
-.tm-navbar-container .uk-navbar-dropdown {
-  margin-top: 0;
-  top: 100% !important;
-}
-
 .tm-navbar-button {
   position: relative;
   padding: 0 10px;
@@ -10772,8 +10767,6 @@ iframe[data-uk-cover] {
           user-select: none;
   border: 1px solid #E5E5E5;
   border-radius: 4px;
-  background: transparent;
-  padding: 0;
   -webkit-transition: 0.1s ease-in-out;
   transition: 0.1s ease-in-out;
   -webkit-transition-property: color, background-color, border-color;
@@ -10782,23 +10775,6 @@ iframe[data-uk-cover] {
 .tm-quantity-button:hover {
   color: #666;
   border-color: rgb(203.5, 203.5, 203.5);
-}
-
-.js-add-to {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: inherit;
 }
 
 .tm-slidenav.uk-invisible {
@@ -11100,43 +11076,4 @@ iframe[data-uk-cover] {
 .tm-grayscale:hover {
   -webkit-filter: none;
           filter: none;
-}
-
-/* Make the "Add to cart" button look visually disabled while loading */
-ajax-cart-product-form[processing] [type=submit] {
-  opacity: 0.7;
-  cursor: not-allowed;
-  pointer-events: none;
-  position: relative;
-  color: transparent !important;
-}
-
-/* Show UIkit-style loading spinner on the button */
-ajax-cart-product-form[processing] [type=submit]::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
-  border: 2px solid transparent;
-  border-top-color: currentColor;
-  border-radius: 50%;
-  -webkit-animation: uk-spinner-rotate 0.8s linear infinite;
-          animation: uk-spinner-rotate 0.8s linear infinite;
-  color: #fff;
-}
-
-/* Use UIkit's spinner rotation animation */
-@keyframes uk-spinner-rotate {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-  }
 }

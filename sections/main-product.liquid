@@ -1,15 +1,27 @@
+<script src="{{ 'variant-picker.js' | asset_url }}" defer></script>
+<script src="{{ 'quantity-selector.js' | asset_url }}" defer></script>
+<script>
+  document.addEventListener('liquid-ajax-cart:request-end', function(event) {
+    const { requestState } = event.detail;
+    // Open side cart only after successful add to cart
+    if (requestState.requestType === 'add' && !requestState.errors) {
+      UIkit.offcanvas('#cart-offcanvas').show();
+    }
+  });
+</script>
+
 <section class="uk-section uk-section-small">
           <div class="uk-container">
             <div class="uk-grid-medium uk-child-width-1-1 uk-grid" uk-grid="">
               <div class="uk-text-center">
                 <ul class="uk-breadcrumb uk-flex-center uk-margin-remove">
-                  <li><a href="index.html">Home</a></li>
-                  <li><a href="catalog.html">Catalog</a></li>
-                  <li><a href="category.html">Laptops &amp; Tablets</a></li>
-                  <li><a href="subcategory.html">Laptops</a></li>
-                  <li><span>Apple MacBook Pro 15" Touch Bar MPTU2LL/A 256GB (Silver)</span></li>
+                  <li><a href="{{ routes.root_url }}">Home</a></li>
+                  {% if product.collections.first %}
+                    <li><a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a></li>
+                  {% endif %}
+                  <li><span>{{ product.title }}</span></li>
                 </ul>
-                <h1 class="uk-margin-small-top uk-margin-remove-bottom">Apple MacBook Pro 15" Touch Bar MPTU2LL/A 256GB (Silver)</h1>
+                <h1 class="uk-margin-small-top uk-margin-remove-bottom">{{ product.title }}</h1>
               </div>
               <div class="uk-grid-margin">
                 <div class="uk-grid-medium uk-child-width-1-1 uk-grid"">
@@ -17,55 +29,79 @@
                     <div class="uk-card uk-card-default uk-card-small tm-ignore-container">
                       <div class="uk-grid-small uk-grid-collapse uk-grid-match uk-grid" uk-grid="">
                         <div class="uk-width-1-1 uk-width-expand@m">
-                          <div class="uk-grid-collapse uk-child-width-1-1 uk-slideshow uk-grid" uk-slideshow="finite: true; ratio: 1:1;" uk-grid="">
+                          <div class="uk-grid-collapse uk-child-width-1-1 uk-slideshow uk-grid" uk-slideshow="finite: true; ratio: 1:1; animation: fade" uk-grid="" data-product-gallery data-current-media-id="{{ product.selected_or_first_available_variant.featured_media.id }}">
                             <div>
                               <ul class="uk-slideshow-items" uk-lightbox="" style="aspect-ratio: 1 / 1; width: 100%;">
-                                {% for media in product.media %}
-                                <li><a class="uk-card-body tm-media-box tm-media-box-zoom" href="{{ media | image_url: width: 2048 }}">
+                                {%- for media in product.media -%}
+                                <li data-media-id="{{ media.id }}" {% if product.selected_or_first_available_variant.featured_media.id == media.id %}data-variant-media="true"{% endif %}>
+                                  <a class="uk-card-body tm-media-box tm-media-box-zoom" href="{{ media | image_url: width: 2048 }}" aria-label="View larger image">
                                     <figure class="tm-media-box-wrap">
-                                        {% render 'image', 
-                                            image: media.preview_image,
-                                            image_class: "",
-                                            max_width: 800,
-                                            max_height: 800,
-                                            sizes: "(min-width: 1200px) 1200px, 100vw",
-                                            widths: "400, 600, 800",
-                                            loading: forloop.first ? 'eager' : 'lazy',
-                                            attributes: 'alt="{{ media.alt | default: product.title }}"',
-                                            fetchpriority: "high"
-                                        %}
-                                    </figure></a>
+                                      {%- case media.media_type -%}
+                                        {%- when 'image' -%}
+                                          {%- if forloop.first -%}
+                                            {{ media.preview_image | image_url: width: 800 | image_tag: preload: true, loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw', widths: '400, 600, 800, 1000', alt: media.alt | default: product.title}}
+                                          {%- else -%}
+                                            {{ media.preview_image | image_url: width: 800 | image_tag: loading: 'lazy', sizes: '(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw', widths: '400, 600, 800, 1000', alt: media.alt | default: product.title }}
+                                          {%- endif -%}
+                                        {%- when 'video' -%}
+                                          {{ media | video_tag: image_size: "1000x1000", loop: true, controls: true, muted: true, class: "uk-width-1-1" }}
+                                        {%- when 'external_video' -%}
+                                          {{ media | external_video_tag: image_size: "1000x1000", loop: true, controls: true, muted: true, class: "uk-width-1-1" }}
+                                        {%- when 'model' -%}
+                                          {{ media | model_viewer_tag: image_size: "1000x1000", reveal: "interaction", toggleable: true, class: "uk-width-1-1" }}
+                                      {%- endcase -%}
+                                    </figure>
+                                  </a>
                                 </li>
-                                {% endfor %}
+                                {%- endfor -%}
                               </ul>
                             </div>
                             <div class="uk-grid-margin uk-first-column">
                               <div class="uk-card-body uk-flex uk-flex-center">
                                 <div class="uk-width-1-2 uk-visible@s">
-                                  <div uk-slider="finite: true" class="uk-slider">
+                                  <div uk-slider="finite: true" class="uk-slider" data-product-thumbnails>
                                     <div class="uk-position-relative">
                                       <div class="uk-slider-container">
                                         <ul class="tm-slider-items uk-slider-items uk-child-width-1-4 uk-grid uk-grid-small">
-                                            {% for media in product.media %}
-                                            <li uk-slideshow-item="{{ forloop.index0 }}">
-                                            <div class="tm-ratio tm-ratio-1-1"><a class="tm-media-box tm-media-box-frame">
-                                                <figure class="tm-media-box-wrap">
-                                                    {% render 'image', 
-                                                        image: media.preview_image,
-                                                        max_width: 200,
-                                                        max_height: 200,
-                                                        sizes: "100px",
-                                                        widths: "100, 150, 200",
-                                                        loading: 'lazy',
-                                                        attributes: 'alt="{{ media.alt | default: product.title }}"'
-                                                    %}
-                                                </figure></a></div>
+                                            {%- for media in product.media -%}
+                                            <li uk-slideshow-item="{{ forloop.index0 }}" data-media-id="{{ media.id }}">
+                                              <div class="tm-ratio tm-ratio-1-1">
+                                                <a href="#" class="tm-media-box tm-media-box-frame {% if product.selected_or_first_available_variant.featured_media.id == media.id %}uk-active{% endif %}" data-thumbnail-link="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}" role="button">
+                                                  <figure class="tm-media-box-wrap">
+                                                    {%- case media.media_type -%}
+                                                      {%- when 'image' -%}
+                                                        {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 150, 200', alt: media.alt | default: product.title }}
+                                                      {%- when 'video' -%}
+                                                        <div class="uk-position-relative">
+                                                          {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 150, 200', alt: media.alt | default: product.title }}
+                                                          <div class="uk-position-center">
+                                                            <span uk-icon="icon: play-circle; ratio: 1.5"></span>
+                                                          </div>
+                                                        </div>
+                                                      {%- when 'external_video' -%}
+                                                        <div class="uk-position-relative">
+                                                          {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 150, 200', alt: media.alt | default: product.title }}
+                                                          <div class="uk-position-center">
+                                                            <span uk-icon="icon: play-circle; ratio: 1.5"></span>
+                                                          </div>
+                                                        </div>
+                                                      {%- when 'model' -%}
+                                                        <div class="uk-position-relative">
+                                                          {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 150, 200', alt: media.alt | default: product.title }}
+                                                          <div class="uk-position-center">
+                                                            <span uk-icon="icon: world; ratio: 1.5"></span>
+                                                          </div>
+                                                        </div>
+                                                    {%- endcase -%}
+                                                  </figure>
+                                                </a>
+                                              </div>
                                             </li>
-                                            {% endfor %}
+                                            {%- endfor -%}
                                         </ul>
-                                        <div><a class="uk-position-center-left-out uk-position-small uk-slidenav-previous uk-icon uk-slidenav" href="#" uk-slider-item="previous" uk-slidenav-previous="">
+                                        <div><a class="uk-position-center-left-out uk-position-small uk-slidenav-previous uk-icon uk-slidenav" href="#" uk-slider-item="previous" uk-slidenav-previous="" aria-label="Previous slide">
                                         </a>
-                                        <a class="uk-position-center-right-out uk-position-small uk-slidenav-next uk-icon uk-slidenav" href="#" uk-slider-item="next" uk-slidenav-next="">
+                                        <a class="uk-position-center-right-out uk-position-small uk-slidenav-next uk-icon uk-slidenav" href="#" uk-slider-item="next" uk-slidenav-next="" aria-label="Next slide">
                                         </a>
                                         </div>
                                       </div>
@@ -78,122 +114,181 @@
                           </div>
                         </div>
                         <div class="uk-width-1-1 uk-width-1-3@m tm-product-info">
-                          <div class="uk-card-body">
-                            <div class="uk-margin">
-                              <div class="uk-grid-small uk-grid" uk-grid="">
-                                <div class="uk-flex uk-flex-middle">
-                                  <ul class="uk-iconnav uk-margin-xsmall-bottom tm-rating">
-                                    
-                                    <li>
-                                        <span class="uk-text-warning" uk-icon="star">
-                                        </span>
-                                    </li>
-                                   <li>
-                                        <span class="uk-text-warning" uk-icon="star">
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="uk-text-warning" uk-icon="star">
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="uk-text-warning" uk-icon="star">
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="uk-text-warning" uk-icon="star">
-                                        </span>
-                                    </li>
-                                  </ul>
-                                  <div class="uk-margin-xsmall-left"><a class="uk-text-meta js-scroll-to-description" href="#description" onclick="UIkit.switcher('.js-product-switcher').show(3);">(2)</a></div>
-                                </div>
-    
-                              </div>
-                            </div>
-                            <div class="uk-margin">
-                              <div class="uk-grid-medium uk-grid" uk-grid="">
-                                <div class="uk-first-column">
-                                  <div class="uk-text-small uk-margin-xsmall-bottom">Color</div>
-                                  <ul class="uk-subnav uk-subnav-pill tm-variations" uk-switcher="">
-                                    <li><a class="tm-variation-color" uk-tooltip="Space Grey">
-                                        <div style="background-color: #aaaeb1"></div></a>
-                                    </li>
-                                    <li><a class="tm-variation-color" uk-tooltip="Silver">
-                                        <div style="background-color: #dddfde"></div></a>
-                                    </li>
-                                  </ul>
-                                </div>
-                                <div>
-                                  <div class="uk-text-small uk-margin-xsmall-bottom">SSD Storage</div>
-                                  <ul class="uk-subnav uk-subnav-pill tm-variations" uk-switcher="">
-                                    <li><a>256 GB</a>
-                                    </li>
-                                    <li><a>512 GB</a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="uk-margin">
-                              <div class="uk-padding-small uk-background-primary-lighten uk-border-rounded">
-                                <div class="uk-grid-small uk-child-width-1-1 uk-grid" uk-grid="">
-                                  <div>
-                                    <del class="uk-text-meta">$1899.00</del>
-                                    <div class="tm-product-price">$1599.00</div>
-                                  </div>
-                                  <div>
+                          <div class="uk-card-body product-content">
+                            <ajax-cart-product-form>
+                            {% form 'product', product %}
+                            {% for block in section.blocks %}
+                              {% case block.type %}
+                                {% when 'rating' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
                                     <div class="uk-grid-small uk-grid" uk-grid="">
-                                      <div>
-                                        <a onclick="increment(-1, 'product-1')" uk-icon="icon: minus; ratio: .75" class="uk-icon">
-                                            <svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="minus"><rect height="1" width="18" y="9" x="1"></rect></svg>
-                                        </a>
-                                        <input class="uk-input tm-quantity-input" id="product-1" type="text" maxlength="3" value="1">
-                                        <a onclick="increment(+1, 'product-1')" uk-icon="icon: plus; ratio: .75" class="uk-icon"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="plus"><rect x="9" y="1" width="1" height="17"></rect><rect x="1" y="9" width="17" height="1"></rect></svg></a>
-                                      </div>
-                                      <div>
-                                        <button class="uk-button uk-button-primary tm-product-add-button tm-shine js-add-to-cart">add to cart</button>
-                                      </div>
-                                      <div class="uk-width-auto uk-width-expand@s uk-flex uk-flex-middle uk-text-meta">
-                                        <a class="uk-margin-small-right js-add-to js-add-to-favorites tm-action-button-active js-added-to" uk-tooltip="Add to favorites" title="" aria-expanded="false"><span uk-icon="heart" class="uk-icon">
-                                            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="heart"><path fill="none" stroke="#000" stroke-width="1.03" d="M10,4 C10,4 8.1,2 5.74,2 C3.38,2 1,3.55 1,6.73 C1,8.84 2.67,10.44 2.67,10.44 L10,18 L17.33,10.44 C17.33,10.44 19,8.84 19,6.73 C19,3.55 16.62,2 14.26,2 C11.9,2 10,4 10,4 L10,4 Z"></path></svg></span></a><a class="js-add-to js-add-to-compare tm-action-button-active js-added-to" uk-tooltip="Add to compare" title="" aria-expanded="false"><span uk-icon="copy" class="uk-icon"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="copy"><rect fill="none" stroke="#000" x="3.5" y="2.5" width="12" height="16"></rect><polyline fill="none" stroke="#000" points="5 0.5 17.5 0.5 17.5 17"></polyline></svg></span>
-                                        </a>
-                                    </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="uk-margin">
-                              <div class="uk-padding-small uk-background-muted uk-border-rounded">
-                                <div class="uk-grid-small uk-child-width-1-1 uk-text-small" uk-grid="">
-                                  <div>
-                                    <div class="uk-grid-collapse uk-grid" uk-grid=""><span class="uk-margin-xsmall-right uk-icon uk-first-column" uk-icon="cart"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="cart"><circle cx="7.3" cy="17.3" r="1.4"></circle><circle cx="13.3" cy="17.3" r="1.4"></circle><polyline fill="none" stroke="#000" points="0 2 3.2 4 5.3 12.5 16 12.5 18 6.5 8 6.5"></polyline></svg></span>
-                                      <div>
-                                        <div class="uk-text-bolder">Delivery</div>
-                                        <div class="uk-text-xsmall uk-text-muted">In stock, free, tomorrow</div>
+                                      <div class="uk-flex uk-flex-middle">
+                                        <ul class="uk-iconnav uk-margin-xsmall-bottom tm-rating">
+                                          <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                                          <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                                          <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                                          <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                                          <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                                        </ul>
+                                        <div class="uk-margin-xsmall-left"><a class="uk-text-meta js-scroll-to-description" href="#description" onclick="UIkit.switcher('.js-product-switcher').show(3);">(2)</a></div>
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="uk-grid-margin">
-                                    <div class="uk-grid-collapse uk-grid" uk-grid=""><span class="uk-margin-xsmall-right uk-icon uk-first-column" uk-icon="location"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="location"><path fill="none" stroke="#000" stroke-width="1.01" d="M10,0.5 C6.41,0.5 3.5,3.39 3.5,6.98 C3.5,11.83 10,19 10,19 C10,19 16.5,11.83 16.5,6.98 C16.5,3.39 13.59,0.5 10,0.5 L10,0.5 Z"></path><circle fill="none" stroke="#000" cx="10" cy="6.8" r="2.3"></circle></svg></span>
-                                      <div>
-                                        <div class="uk-text-bolder">Pick up from store</div>
-                                        <div class="uk-text-xsmall uk-text-muted">In stock, free, tomorrow</div>
+                                  
+                                {% when 'variant_picker' %}
+                                  {%- unless product.has_only_default_variant -%}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
+                                    <variant-selector 
+                                      class="uk-grid-medium uk-grid product-content__variants" 
+                                      uk-grid="" 
+                                      data-section-id="{{ section.id }}"
+                                      data-product-url="{{ product.url }}"
+                                    >
+                                      {% for option in product.options_with_values %}
+                                      <fieldset class="uk-fieldset{% if forloop.first %} uk-first-column{% endif %}">
+                                        <legend class="uk-text-small uk-margin-xsmall-bottom">{{ option.name }}</legend>
+                                        <ul class="uk-subnav uk-subnav-pill tm-variations">
+                                          {% for value in option.values %}
+                                            {% if option.name == "Color" and value.swatch %}
+                                              <li{% if option.selected_value == value %} class="uk-active"{% endif %}>
+                                                <a href="#" class="tm-variation-color" uk-tooltip="{{ value }}" role="button">
+                                                  <input type="radio" id="{{ section.id }}-{{ option.name | handle }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value }}" {% if option.selected_value == value %}checked{% endif %} class="uk-hidden">
+                                                  <div style="{% if value.swatch.color %}background-color: {{ value.swatch.color }}{% elsif value.swatch.image %}background-image: url({{ value.swatch.image | image_url: width: 50 }}); background-size: cover;{% endif %}"></div>
+                                                </a>
+                                              </li>
+                                            {% else %}
+                                              <li{% if option.selected_value == value %} class="uk-active"{% endif %}>
+                                                <a href="#" role="button">
+                                                  <input type="radio" id="{{ section.id }}-{{ option.name | handle }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value }}" {% if option.selected_value == value %}checked{% endif %} class="uk-hidden">
+                                                  {{ value }}
+                                                </a>
+                                              </li>
+                                            {% endif %}
+                                          {% endfor %}
+                                        </ul>
+                                      </fieldset>
+                                      {% endfor %}
+                                    </variant-selector>
+                                  </div>
+                                  {%- endunless -%}
+
+                                {% when 'price' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
+                                    <div class="uk-padding-small uk-background-primary-lighten uk-border-rounded">
+                                      <div class="uk-grid-small uk-child-width-1-1 uk-grid" uk-grid="">
+                                        <div>
+                                          {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+                                            <del class="uk-text-meta" data-compare-price>{{ product.selected_or_first_available_variant.compare_at_price | money }}</del>
+                                          {% endif %}
+                                          <div class="tm-product-price" data-product-price>{{ product.selected_or_first_available_variant.price | money }}</div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="uk-margin">
-                              <ul class="uk-list uk-text-small uk-margin-remove">
-                                <li><span class="uk-text-muted">Diagonal display: </span><span>15.4"</span></li>
-                                <li><span class="uk-text-muted">CPU: </span><span>Intel®&nbsp;Core™ i7</span></li>
-                                <li><span class="uk-text-muted">RAM: </span><span>16&nbsp;GB</span></li>
-                                <li><span class="uk-text-muted">Video Card: </span><span>AMD Radeon Pro 555</span></li>
-                              </ul>
-                              <div class="uk-margin-small-top"><a class="uk-link-heading js-scroll-to-description" href="#description" onclick="UIkit.switcher('.js-product-switcher').show(1);"><span class="tm-pseudo">Detailed specifications</span><span class="uk-margin-xsmall-left uk-icon" uk-icon="icon: chevron-down; ratio: .75;"><svg width="15" height="15" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="chevron-down"><polyline fill="none" stroke="#000" stroke-width="1.03" points="16 7 10 13 4 7"></polyline></svg></span></a></div>
-                            </div>
+
+                                {% when 'buy_buttons' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
+                                    <div class="uk-padding-small uk-background-primary-lighten uk-border-rounded">
+                                      <div class="uk-grid-small uk-child-width-1-1 uk-grid" uk-grid="">
+                                        <div>
+                                          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
+                                          <div class="uk-grid-small uk-grid" uk-grid="">
+                                            <div>
+                                              <quantity-selector data-max="{{ product.selected_or_first_available_variant.inventory_quantity }}">
+                                                <button type="button" class="tm-quantity-button" data-quantity-minus aria-label="Decrease quantity">−</button>
+                                                <input class="uk-input tm-quantity-input" name="quantity" type="text" maxlength="3" value="1" data-quantity-input aria-label="Quantity">
+                                                <button type="button" class="tm-quantity-button" data-quantity-plus aria-label="Increase quantity">+</button>
+                                              </quantity-selector>
+                                            </div>
+                                            <div>
+                                              <button type="submit" name="add" class="uk-button uk-button-primary tm-product-add-button tm-shine js-add-to-cart" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                                                {% if product.selected_or_first_available_variant.available %}
+                                                  Add to cart
+                                                {% else %}
+                                                  Sold out
+                                                {% endif %}
+                                              </button>
+                                            </div>
+                                            <div class="uk-width-auto uk-width-expand@s uk-flex uk-flex-middle uk-text-meta">
+                                              <button type="button" class="uk-margin-small-right js-add-to js-add-to-favorites tm-action-button-active js-added-to" uk-tooltip="Add to favorites" aria-label="Add to favorites"><span uk-icon="heart" class="uk-icon"></span></button>
+                                              <button type="button" class="js-add-to js-add-to-compare tm-action-button-active js-added-to" uk-tooltip="Add to compare" aria-label="Add to compare"><span uk-icon="copy" class="uk-icon"></span></button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                {% when 'inventory' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
+                                    <span class="uk-text-small uk-text-muted">Inventory: <span data-variant-inventory>{{ product.selected_or_first_available_variant.inventory_quantity }}</span></span>
+                                  </div>
+
+                                {% when 'eta' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }} data-eta-block {% if product.selected_or_first_available_variant.metafields.custom.eta == blank %}style="display: none;"{% endif %}>
+                                    <div class="uk-grid-collapse uk-grid" uk-grid="">
+                                      <span class="uk-margin-xsmall-right uk-icon" uk-icon="clock"></span>
+                                      <div>
+                                        <div class="uk-text-small">
+                                          <span class="uk-text-bold">{{ block.settings.eta_label | default: 'Estimated Arrival' }}:</span>
+                                          <span data-variant-eta>{{ product.selected_or_first_available_variant.metafields.custom.eta }}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                {% when 'shipping_info' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
+                                    <div class="uk-padding-small uk-background-muted uk-border-rounded">
+                                      <div class="uk-grid-small uk-child-width-1-1 uk-text-small" uk-grid="">
+                                        <div>
+                                          <div class="uk-grid-collapse uk-grid" uk-grid=""><span class="uk-margin-xsmall-right uk-icon uk-first-column" uk-icon="cart"></span>
+                                            <div>
+                                              <div class="uk-text-bolder">{{ block.settings.delivery_title | default: 'Delivery' }}</div>
+                                              <div class="uk-text-xsmall uk-text-muted">{{ block.settings.delivery_text | default: 'In stock, free, tomorrow' }}</div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="uk-grid-margin">
+                                          <div class="uk-grid-collapse uk-grid" uk-grid=""><span class="uk-margin-xsmall-right uk-icon uk-first-column" uk-icon="location"></span>
+                                            <div>
+                                              <div class="uk-text-bolder">{{ block.settings.pickup_title | default: 'Pick up from store' }}</div>
+                                              <div class="uk-text-xsmall uk-text-muted">{{ block.settings.pickup_text | default: 'In stock, free, tomorrow' }}</div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                {% when 'description' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
+                                    <div class="uk-text-small">{{ product.description }}</div>
+                                  </div>
+
+                                {% when 'specifications' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
+                                    <ul class="uk-list uk-text-small uk-margin-remove">
+                                      {% for tag in product.tags %}
+                                        {% if tag contains 'spec:' %}
+                                          {% assign spec_parts = tag | remove: 'spec:' | split: ':' %}
+                                          <li><span class="uk-text-muted">{{ spec_parts[0] }}: </span><span>{{ spec_parts[1] }}</span></li>
+                                        {% endif %}
+                                      {% endfor %}
+                                    </ul>
+                                    <div class="uk-margin-small-top"><a class="uk-link-heading js-scroll-to-description" href="#description" onclick="UIkit.switcher('.js-product-switcher').show(1);"><span class="tm-pseudo">Detailed specifications</span><span class="uk-margin-xsmall-left uk-icon" uk-icon="icon: chevron-down; ratio: .75;"></span></a></div>
+                                  </div>
+
+                                {% when '@app' %}
+                                  <div class="uk-margin" {{ block.shopify_attributes }}>
+                                    {% render block %}
+                                  </div>
+
+                              {% endcase %}
+                            {% endfor %}
+                            <div data-ajax-cart-errors="form"></div>
+                            {% endform %}
+                            </ajax-cart-product-form>
                           </div>
                         </div>
                         
@@ -206,17 +301,126 @@
         </div>    
         </section>
 
-        <script>
-            // Increment
-            function increment(incrementor, target) {
-                var value = parseInt(document.getElementById(target).value, 10);
-                value = isNaN(value) ? 0 : value;
-
-                if (incrementor < 0 && value > 1) {
-                    value += incrementor;
-                } else {
-                    value += incrementor;
-                }
-                document.getElementById(target).value = value;
-            } 
-        </script>
+{% schema %}
+{
+  "name": "Main Product",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "rating",
+      "name": "Rating",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_quantity",
+          "label": "Show quantity selector",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_wishlist",
+          "label": "Show wishlist button",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "inventory",
+      "name": "Inventory",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "eta",
+      "name": "ETA (Estimated Arrival)",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "eta_label",
+          "label": "Label",
+          "default": "Estimated Arrival"
+        }
+      ]
+    },
+    {
+      "type": "shipping_info",
+      "name": "Shipping info",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "delivery_title",
+          "label": "Delivery title",
+          "default": "Delivery"
+        },
+        {
+          "type": "text",
+          "id": "delivery_text",
+          "label": "Delivery text",
+          "default": "In stock, free, tomorrow"
+        },
+        {
+          "type": "text",
+          "id": "pickup_title",
+          "label": "Pickup title",
+          "default": "Pick up from store"
+        },
+        {
+          "type": "text",
+          "id": "pickup_text",
+          "label": "Pickup text",
+          "default": "In stock, free, tomorrow"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "specifications",
+      "name": "Specifications",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main Product",
+      "blocks": [
+        { "type": "rating" },
+        { "type": "variant_picker" },
+        { "type": "price" },
+        { "type": "buy_buttons" },
+        { "type": "shipping_info" },
+        { "type": "specifications" }
+      ]
+    }
+  ]
+}
+{% endschema %}

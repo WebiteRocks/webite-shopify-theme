@@ -6,16 +6,27 @@ class QuantitySelector extends HTMLElement {
     super();
   }
 
-  connectedCallback() {
-    this.productForm = document.querySelector("form[action='/cart/add']");
-    this.quantityInput = this.productForm.querySelector(
-      "input[name='quantity']"
-    );
+  get maxQuantity() {
+    return this.getAttribute("data-max") || 9999;
+  }
 
+  connectedCallback() {
+    this.productForm = this.closest("form[action='/cart/add']") || document.querySelector("form[action='/cart/add']");
+    
+    // Support both patterns: separate display/input OR single input
     this.quantityDisplay = this.querySelector("[data-quantity-display]");
+    this.quantityInputDirect = this.querySelector("[data-quantity-input]");
+    this.quantityInput = this.productForm ? this.productForm.querySelector("input[name='quantity']") : null;
+    
+    // If using direct input pattern (main-product.liquid style)
+    if (this.quantityInputDirect) {
+      this.quantityInput = this.quantityInputDirect;
+    }
 
     this.minusButton = this.querySelector("[data-quantity-minus]");
     this.plusButton = this.querySelector("[data-quantity-plus]");
+
+    if (!this.minusButton || !this.plusButton) return;
 
     this.handleMinusClick = this.handleMinusClick.bind(this);
     this.handlePlusClick = this.handlePlusClick.bind(this);
@@ -25,28 +36,45 @@ class QuantitySelector extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.minusButton.removeEventListener("click", this.handleMinusClick);
-    this.plusButton.removeEventListener("click", this.handlePlusClick);
+    if (this.minusButton) {
+      this.minusButton.removeEventListener("click", this.handleMinusClick);
+    }
+    if (this.plusButton) {
+      this.plusButton.removeEventListener("click", this.handlePlusClick);
+    }
   }
 
-  handleMinusClick() {
-    if (parseInt(this.quantityDisplay.textContent) === 1) {
-      return;
+  getCurrentQuantity() {
+    if (this.quantityDisplay) {
+      return parseInt(this.quantityDisplay.textContent) || 1;
     }
-    this.quantityDisplay.textContent =
-      parseInt(this.quantityDisplay.textContent) - 1;
-    this.quantityInput.value = parseInt(this.quantityInput.value) - 1;
+    if (this.quantityInput) {
+      return parseInt(this.quantityInput.value) || 1;
+    }
+    return 1;
   }
 
-  handlePlusClick() {
-    if (
-      parseInt(this.quantityDisplay.textContent) === parseInt(this.maxQuantity)
-    ) {
-      return;
+  setQuantity(value) {
+    if (this.quantityDisplay) {
+      this.quantityDisplay.textContent = value;
     }
-    this.quantityDisplay.textContent =
-      parseInt(this.quantityDisplay.textContent) + 1;
-    this.quantityInput.value = parseInt(this.quantityInput.value) + 1;
+    if (this.quantityInput) {
+      this.quantityInput.value = value;
+    }
+  }
+
+  handleMinusClick(e) {
+    e.preventDefault();
+    const current = this.getCurrentQuantity();
+    if (current <= 1) return;
+    this.setQuantity(current - 1);
+  }
+
+  handlePlusClick(e) {
+    e.preventDefault();
+    const current = this.getCurrentQuantity();
+    if (current >= parseInt(this.maxQuantity)) return;
+    this.setQuantity(current + 1);
   }
 }
 

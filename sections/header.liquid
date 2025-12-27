@@ -4,8 +4,8 @@
         {% comment %} <button class="uk-navbar-toggle uk-hidden@m uk-navbar-toggle-icon uk-icon" uk-toggle="target: #nav-offcanvas" uk-navbar-toggle-icon="">
           <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="navbar-toggle-icon"><rect y="9" width="20" height="2"></rect><rect y="3" width="20" height="2"></rect><rect y="15" width="20" height="2"></rect></svg>
         </button> {% endcomment %}
-         <button class="uk-navbar-toggle uk-hidden@m uk-navbar-toggle-icon uk-icon" uk-toggle="target: #nav-offcanvas">
-            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="navbar-toggle-icon"><rect y="9" width="20" height="2"></rect><rect y="3" width="20" height="2"></rect><rect y="15" width="20" height="2"></rect></svg>
+         <button class="uk-navbar-toggle uk-hidden@m uk-navbar-toggle-icon uk-icon" uk-toggle="target: #nav-offcanvas" aria-label="Open menu">
+            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="navbar-toggle-icon" aria-hidden="true"><rect y="9" width="20" height="2"></rect><rect y="3" width="20" height="2"></rect><rect y="15" width="20" height="2"></rect></svg>
          </button>
         <a class="uk-navbar-item uk-logo" href="index.html">LOGO</a>
         <nav class="uk-visible@m">
@@ -173,7 +173,7 @@
           </ul>
         </nav>
       </div>
-      <div class="uk-navbar-right"><a class="uk-navbar-toggle tm-navbar-button uk-search-icon uk-icon" href="#" uk-search-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="search-icon"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg></a>
+      <div class="uk-navbar-right"><a class="uk-navbar-toggle tm-navbar-button uk-search-icon uk-icon" href="#" uk-search-icon="" aria-label="Search"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="search-icon" aria-hidden="true"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg></a>
         <div class="uk-navbar-dropdown uk-padding-small uk-margin-remove uk-drop" uk-drop="mode: click;cls-drop: uk-navbar-dropdown;boundary: .tm-navbar-container;boundary-align: true;pos: bottom-justify;flip: x">
           <div class="uk-container">
             <div class="uk-grid-small uk-flex-middle uk-grid" uk-grid="">
@@ -185,7 +185,7 @@
               <div class="uk-width-auto"><a class="uk-navbar-dropdown-close uk-close uk-icon" href="#" uk-close=""><svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" data-svg="close-icon"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"></line><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"></line></svg></a></div>
             </div>
           </div>
-        </div><a class="uk-navbar-item uk-link-muted uk-visible@m tm-navbar-button" href="compare.html"><span uk-icon="copy" class="uk-icon"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="copy"><rect fill="none" stroke="#000" x="3.5" y="2.5" width="12" height="16"></rect><polyline fill="none" stroke="#000" points="5 0.5 17.5 0.5 17.5 17"></polyline></svg></span><span class="uk-badge">3</span></a><a class="uk-navbar-item uk-link-muted tm-navbar-button uk-icon" href="account.html" uk-icon="user"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="user"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9.9" cy="6.4" r="4.4"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M1.5,19 C2.3,14.5 5.8,11.2 10,11.2 C14.2,11.2 17.7,14.6 18.5,19.2"></path></svg></a>
+        </div><a class="uk-navbar-item uk-link-muted uk-visible@m tm-navbar-button" href="compare.html" aria-label="Compare products"><span uk-icon="copy" class="uk-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="copy"><rect fill="none" stroke="#000" x="3.5" y="2.5" width="12" height="16"></rect><polyline fill="none" stroke="#000" points="5 0.5 17.5 0.5 17.5 17"></polyline></svg></span><span class="uk-badge">3</span></a><a class="uk-navbar-item uk-link-muted tm-navbar-button uk-icon" href="account.html" uk-icon="user" aria-label="Account"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="user" aria-hidden="true"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9.9" cy="6.4" r="4.4"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M1.5,19 C2.3,14.5 5.8,11.2 10,11.2 C14.2,11.2 17.7,14.6 18.5,19.2"></path></svg></a>
         <div class="uk-padding-small uk-margin-remove uk-dropdown uk-drop" uk-dropdown="pos: bottom-right; offset: -10; delay-hide: 200;" style="min-width: 150px;">
           <ul class="uk-nav uk-dropdown-nav">
             <li><a href="account.html">
@@ -199,7 +199,7 @@
             <li class="uk-nav-divider"></li>
             <li><a href="#">Log out</a></li>
           </ul>
-        </div><a class="uk-navbar-item uk-link-muted tm-navbar-button" href="cart.html" uk-toggle="target: #cart-offcanvas" onclick="return false"><span uk-icon="cart" class="uk-icon"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="cart"><circle cx="7.3" cy="17.3" r="1.4"></circle><circle cx="13.3" cy="17.3" r="1.4"></circle><polyline fill="none" stroke="#000" points="0 2 3.2 4 5.3 12.5 16 12.5 18 6.5 8 6.5"></polyline></svg></span><span class="uk-badge">2</span></a>
+        </div><a class="uk-navbar-item uk-link-muted tm-navbar-button" href="{{ routes.cart_url }}" uk-toggle="target: #cart-offcanvas" onclick="return false" aria-label="Shopping cart"><span uk-icon="cart" class="uk-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="cart"><circle cx="7.3" cy="17.3" r="1.4"></circle><circle cx="13.3" cy="17.3" r="1.4"></circle><polyline fill="none" stroke="#000" points="0 2 3.2 4 5.3 12.5 16 12.5 18 6.5 8 6.5"></polyline></svg></span><span class="uk-badge header__cart-quantity" data-ajax-cart-bind="item_count">{{ cart.item_count }}</span></a>
       </div>
     </div>
   </div>
