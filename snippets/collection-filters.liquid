@@ -1,0 +1,164 @@
+<form class="collection-filters-form">
+  
+  {%- comment -%} Active Filters {%- endcomment -%}
+  {%- if active_filters_count > 0 -%}
+    <div class="uk-margin-bottom">
+      <div class="uk-flex uk-flex-between uk-flex-middle uk-margin-small-bottom">
+        <span class="uk-text-bold">Active Filters ({{ active_filters_count }})</span>
+        <a href="{{ collection.url }}" class="uk-link-muted uk-text-small">Clear all</a>
+      </div>
+      <div class="uk-flex uk-flex-wrap" uk-grid="margin: small">
+        {%- for filter in collection.filters -%}
+          {%- for value in filter.active_values -%}
+            <div>
+              <a href="{{ value.url_to_remove }}" class="uk-label uk-label-default">
+                {{ filter.label }}: {{ value.label }}
+                <span uk-icon="icon: close; ratio: 0.7"></span>
+              </a>
+            </div>
+          {%- endfor -%}
+          {%- if filter.type == 'price_range' -%}
+            {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+              <div>
+                <a href="{{ filter.url_to_remove }}" class="uk-label uk-label-default">
+                  {{ filter.min_value.value | default: 0 | money }} - {{ filter.max_value.value | default: filter.range_max | money }}
+                  <span uk-icon="icon: close; ratio: 0.7"></span>
+                </a>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    <hr>
+  {%- endif -%}
+
+  {%- comment -%} Filter Groups {%- endcomment -%}
+  <ul class="uk-accordion-default" uk-accordion="multiple: true">
+    {%- for filter in collection.filters -%}
+      <li class="{% if filter.active_values.size > 0 or filter.min_value.value != nil or filter.max_value.value != nil %}uk-open{% endif %}">
+        <a class="uk-accordion-title" href>
+          {{ filter.label }}
+          {%- if filter.active_values.size > 0 -%}
+            <span class="uk-badge uk-margin-small-left">{{ filter.active_values.size }}</span>
+          {%- endif -%}
+        </a>
+        <div class="uk-accordion-content">
+          {%- case filter.type -%}
+
+            {%- when 'boolean' -%}
+              <ul class="uk-list">
+                {%- if filter.true_value -%}
+                  <li>
+                    <label class="uk-flex uk-flex-middle">
+                      <input 
+                        type="checkbox" 
+                        class="uk-checkbox uk-margin-small-right"
+                        name="{{ filter.param_name }}"
+                        value="{{ filter.true_value.value }}"
+                        {% if filter.true_value.active %}checked{% endif %}
+                        {% if filter.true_value.count == 0 %}disabled{% endif %}
+                      >
+                      <span>{{ filter.true_value.label }} ({{ filter.true_value.count }})</span>
+                    </label>
+                  </li>
+                {%- endif -%}
+                {%- if filter.false_value -%}
+                  <li>
+                    <label class="uk-flex uk-flex-middle">
+                      <input 
+                        type="checkbox" 
+                        class="uk-checkbox uk-margin-small-right"
+                        name="{{ filter.param_name }}"
+                        value="{{ filter.false_value.value }}"
+                        {% if filter.false_value.active %}checked{% endif %}
+                        {% if filter.false_value.count == 0 %}disabled{% endif %}
+                      >
+                      <span>{{ filter.false_value.label }} ({{ filter.false_value.count }})</span>
+                    </label>
+                  </li>
+                {%- endif -%}
+              </ul>
+
+            {%- when 'list' -%}
+              <ul class="uk-list">
+                {%- for value in filter.values -%}
+                  <li>
+                    <label class="uk-flex uk-flex-middle">
+                      <input 
+                        type="checkbox" 
+                        class="uk-checkbox uk-margin-small-right"
+                        name="{{ filter.param_name }}"
+                        value="{{ value.value }}"
+                        {% if value.active %}checked{% endif %}
+                        {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                      >
+                      {%- if filter.presentation == 'swatch' and value.swatch -%}
+                        <span class="tm-filter-swatch uk-margin-small-right" style="
+                          {%- if value.swatch.color -%}
+                            background-color: {{ value.swatch.color }};
+                          {%- elsif value.swatch.image -%}
+                            background-image: url({{ value.swatch.image | image_url: width: 24 }});
+                          {%- endif -%}
+                        "></span>
+                      {%- endif -%}
+                      <span{% if value.count == 0 and value.active == false %} class="uk-text-muted"{% endif %}>
+                        {{ value.label }} ({{ value.count }})
+                      </span>
+                    </label>
+                  </li>
+                {%- endfor -%}
+              </ul>
+
+            {%- when 'price_range' -%}
+              <div class="uk-grid-small" uk-grid>
+                <div class="uk-width-1-2">
+                  <label class="uk-form-label uk-text-small">Min</label>
+                  <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon">{{ cart.currency.symbol }}</span>
+                    <input 
+                      type="number"
+                      class="uk-input uk-form-small"
+                      name="{{ filter.min_value.param_name }}"
+                      value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      placeholder="{{ filter.range_min | money_without_currency }}"
+                    >
+                  </div>
+                </div>
+                <div class="uk-width-1-2">
+                  <label class="uk-form-label uk-text-small">Max</label>
+                  <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon">{{ cart.currency.symbol }}</span>
+                    <input 
+                      type="number"
+                      class="uk-input uk-form-small"
+                      name="{{ filter.max_value.param_name }}"
+                      value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      placeholder="{{ filter.range_max | money_without_currency }}"
+                    >
+                  </div>
+                </div>
+              </div>
+
+          {%- endcase -%}
+
+          {%- if filter.active_values.size > 0 -%}
+            <div class="uk-margin-small-top">
+              <a href="{{ filter.url_to_remove }}" class="uk-link-muted uk-text-small">Reset {{ filter.label }}</a>
+            </div>
+          {%- endif -%}
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  <noscript>
+    <div class="uk-margin-top">
+      <button type="submit" class="uk-button uk-button-primary uk-width-1-1">Apply Filters</button>
+    </div>
+  </noscript>
+</form>

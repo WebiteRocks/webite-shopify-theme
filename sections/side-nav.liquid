@@ -18,23 +18,17 @@
           <button class="uk-offcanvas-close" type="button" uk-close></button>
         </header>
         <nav class="uk-card-small uk-card-body">
-        <ul class="uk-nav-default uk-nav-parent-icon uk-list-divider uk-nav tm-nav-mobile" uk-nav="multiple: true">
-            {% assign nav_menu = section.settings.menu | default: 'main-menu' %}
+          {% assign nav_menu = section.settings.menu | default: 'main-menu' %}
+          <ul class="uk-nav-default uk-nav-divider" uk-nav="multiple: true">
             {% for link in linklists[nav_menu].links %}
               {% if link.links.size > 0 %}
                 <li class="uk-parent">
-                  <div class="tm-nav-parent-link uk-flex uk-flex-middle uk-flex-between">
-                    <a href="{{ link.url }}" class="uk-width-expand">{{ link.title }}</a>
-                    <span class="tm-nav-toggle" uk-nav-parent-icon></span>
-                  </div>
-                  <ul class="uk-nav-sub uk-list-divider">
+                  <a href="#">{{ link.title }} <span uk-nav-parent-icon></span></a>
+                  <ul class="uk-nav-sub uk-background-muted">
                     {% for child_link in link.links %}
                       {% if child_link.links.size > 0 %}
                         <li class="uk-parent">
-                          <div class="tm-nav-parent-link uk-flex uk-flex-middle uk-flex-between">
-                            <a href="{{ child_link.url }}" class="uk-width-expand">{{ child_link.title }}</a>
-                            <span class="tm-nav-toggle" uk-nav-parent-icon></span>
-                          </div>
+                          <a href="{{ child_link.url }}">{{ child_link.title }} <span uk-nav-parent-icon></span></a>
                           <ul class="uk-nav-sub">
                             {% for grandchild_link in child_link.links %}
                               <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title }}</a></li>
@@ -45,23 +39,17 @@
                         <li><a href="{{ child_link.url }}">{{ child_link.title }}</a></li>
                       {% endif %}
                     {% endfor %}
-                    <li class="uk-text-center">
-                      <a class="uk-link-muted uk-text-uppercase tm-link-to-all" href="{{ link.url }}">
-                        <span>See all</span>
-                        <span uk-icon="icon: chevron-right; ratio: .75;"></span>
-                      </a>
-                    </li>
                   </ul>
                 </li>
               {% else %}
                 <li><a href="{{ link.url }}">{{ link.title }}</a></li>
               {% endif %}
             {% endfor %}
-        </ul>
+          </ul>
         </nav>
         {% if section.settings.secondary_menu != blank %}
         <nav class="uk-card-small uk-card-body">
-        <ul class="uk-nav uk-nav-default">
+        <ul class="uk-nav uk-nav-default uk-nav-divider">
             {% for link in linklists[section.settings.secondary_menu].links %}
               <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {% endfor %}
@@ -89,65 +77,6 @@
     </div>
     </aside>
 </div>
-
-<style>
-  /* Mobile nav parent link wrapper - match default nav item padding */
-  .tm-nav-mobile .tm-nav-parent-link {
-    padding: 5px 20px 0;
-  }
-  /* Mobile nav toggle */
-  .tm-nav-mobile .tm-nav-toggle {
-    padding: 10px 15px;
-    margin-right: -15px;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    transform: rotate(-90deg);
-  }
-  .tm-nav-mobile .uk-parent.uk-open > .tm-nav-parent-link .tm-nav-toggle {
-    transform: rotate(0deg);
-  }
-  /* Remove default UIkit parent icon from the link since we moved it to separate toggle */
-  .tm-nav-mobile.uk-nav-parent-icon > .uk-parent > .tm-nav-parent-link > a::after,
-  .tm-nav-mobile .uk-nav-sub .uk-parent > .tm-nav-parent-link > a::after {
-    display: none !important;
-  }
-  /* Remove submenu indentation and add grey background */
-  .tm-nav-mobile .uk-nav-sub {
-    padding-left: 0 !important;
-    background-color: #f8f8f8;
-  }
-  .tm-nav-mobile .uk-nav-sub a {
-    padding-left: 20px;
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Handle toggle clicks for mobile nav
-    document.querySelectorAll('.tm-nav-mobile .tm-nav-toggle').forEach(function(toggle) {
-      toggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const parent = this.closest('.uk-parent');
-        if (parent) {
-          // Toggle the UIkit nav item
-          const nav = this.closest('[uk-nav]');
-          if (nav && UIkit.nav(nav)) {
-            const index = Array.from(nav.querySelectorAll(':scope > .uk-parent, :scope .uk-nav-sub > .uk-parent')).indexOf(parent);
-            UIkit.nav(nav).toggle(index, true);
-          } else {
-            // Fallback: manually toggle
-            parent.classList.toggle('uk-open');
-            const sub = parent.querySelector(':scope > .uk-nav-sub');
-            if (sub) {
-              sub.hidden = !sub.hidden;
-            }
-          }
-        }
-      });
-    });
-  });
-</script>
 
 {% schema %}
 {
