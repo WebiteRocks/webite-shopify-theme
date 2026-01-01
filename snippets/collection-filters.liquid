@@ -37,7 +37,7 @@
   <ul class="uk-accordion-default" uk-accordion="multiple: true">
     {%- for filter in collection.filters -%}
       <li class="{% if filter.active_values.size > 0 or filter.min_value.value != nil or filter.max_value.value != nil %}uk-open{% endif %}">
-        <a class="uk-accordion-title" href>
+        <a class="uk-accordion-title uk-flex uk-flex-between uk-flex-middle uk-width-1-1" href uk-accordion-icon>
           {{ filter.label }}
           {%- if filter.active_values.size > 0 -%}
             <span class="uk-badge uk-margin-small-left">{{ filter.active_values.size }}</span>

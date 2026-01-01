@@ -5,6 +5,12 @@
     transition-property: color, background-color, border;
 }
 
+@mixin hook-form-radio() {
+    border: $form-radio-border-width solid $form-radio-border;
+    transition: 0.2s ease-in-out;
+    transition-property: background-color, border;
+}
+
 @mixin hook-form-misc() {
     .uk-form-label-required::after {
         content: "*";
