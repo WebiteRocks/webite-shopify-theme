@@ -9,15 +9,23 @@
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
 
+    {%- comment -%} LCP Image Preload - Early in head for fastest discovery {%- endcomment -%}
+    {%- if request.page_type == 'product' -%}
+      {%- assign lcp_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+      {%- if lcp_media -%}
+        <link rel="preload" as="image" fetchpriority="high" href="{{ lcp_media.preview_image | image_url: width: 600 }}" imagesrcset="{{ lcp_media.preview_image | image_url: width: 400 }} 400w, {{ lcp_media.preview_image | image_url: width: 600 }} 600w, {{ lcp_media.preview_image | image_url: width: 800 }} 800w" imagesizes="(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw">
+      {%- endif -%}
+    {%- endif -%}
+
+    {% render 'critical-css' %}
+    
+    {{ 'uikit.min.css' | asset_url | stylesheet_tag: preload: true }}
+    {% render 'css-vars' %}
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
     
     {{ content_for_header }}
     
-    {% comment %} {% include 'css-vars' %} {% endcomment %}
-    {% comment %} {{ 'main.css' | asset_url | stylesheet_tag: preload: boolean }} {% endcomment %}
-    {{ 'style.css' | asset_url | stylesheet_tag: preload: true }}
-    {% comment %} {{ 'uikit.min.js' | asset_url | script_tag }} {% endcomment %}
     <script src="{{ 'uikit.min.js' | asset_url }}" defer></script>
-    <script src="{{ 'uikit-icons.min.js' | asset_url }}" defer></script>
   </head>
 
   <body>
@@ -33,73 +41,15 @@
 
     {% section 'side-nav' %}
     {% section 'side-cart' %}
+    {% render 'product-quick-view' %}
 
-    {% comment %} <script src="{{ 'shopify-money.js' | asset_url }}" defer="defer"></script>
-
-    {% if content_for_layout contains 'webite-section-hero' %}
-      {% unless content_for_layout contains 'section-hero.css' %}
-        {{ 'section-hero.css' | asset_url | stylesheet_tag }}
-      {% endunless %}
-    {% endif  %}
-    {% if content_for_layout contains 'webite-section-main-product' %}
-      {% unless content_for_layout contains 'main-product.css' %}
-        {{ 'main-product.css' | asset_url | stylesheet_tag }}
-      {% endunless %}
-    {% endif  %} {% endcomment %}
-
-    
-  {% comment %} <script>
-  // Offload third-party app scripts until user interaction
-  document.addEventListener("DOMContentLoaded", function() {
-    let scriptsLoaded = false;
-    const events = ["click", "scroll", "touchmove", "touchstart", "touchend", "touchforcechange", "mousemove", "keydown"];
-    
-
-    function loadDeferredScripts() {
-      if (!scriptsLoaded) {
-        scriptsLoaded = true;
-        events.forEach(event => document.removeEventListener(event, loadDeferredScripts));
-        
-        // Load deferred third-party scripts
-        const deferredContainer = document.getElementById('deferred-scripts');
-        if (deferredContainer) {
-          const scripts = deferredContainer.querySelectorAll('script');
-          scripts.forEach(function(script) {
-            const newScript = document.createElement('script');
-            if (script.src) {
-              newScript.src = script.src;
-            } else {
-              newScript.textContent = script.textContent;
-            }
-            // Copy attributes
-            Array.from(script.attributes).forEach(attr => {
-              if (attr.name !== 'type') {
-                newScript.setAttribute(attr.name, attr.value);
-              }
-            });
-            document.head.appendChild(newScript);
-          });
-        }
-      }
-    }
-
-    events.forEach(event => document.addEventListener(event, loadDeferredScripts));
-    
-    // Also load after 5 seconds if no interaction
-    setTimeout(loadDeferredScripts, 5000);
-  });
-  </script>
-
-  <!-- Deferred third-party scripts (loaded on user interaction) -->
-  <template id="deferred-scripts">
-    {{ deferred_scripts }}
-  </template> {% endcomment %}
- 
     <!-- Shopify money for all currencies -->
     <script src="{{ 'shopify-money.js' |  asset_url }}" defer></script>
+    <script src="{{ 'uikit-icons.min.js' | asset_url }}" defer></script>
     <script type="application/json" data-ajax-cart-initial-state>
       {{ cart | json }}
     </script>
-    <script type="module" src="{{ 'liquid-ajax-cart-v2.2.0.js' | asset_url }}" defer></script>    
+    <script type="module" src="{{ 'liquid-ajax-cart-v2.2.0.js' | asset_url }}" defer></script>
+    <script src="{{ 'cart-scripts.js' | asset_url }}" defer></script>
   </body>
 </html>

@@ -32,4 +32,316 @@
       }
     ]
   },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Text Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text color",
+        "default": "#666666"
+      },
+      {
+        "type": "color",
+        "id": "color_text_emphasis",
+        "label": "Headings color",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "color_text_muted",
+        "label": "Muted text color",
+        "default": "#999999"
+      },
+      {
+        "type": "header",
+        "content": "Background Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_background_muted",
+        "label": "Muted background",
+        "default": "#f8f8f8"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary color",
+        "default": "#1e87f0"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Secondary color",
+        "default": "#222222"
+      },
+      {
+        "type": "header",
+        "content": "Status Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "label": "Success color",
+        "default": "#32d296"
+      },
+      {
+        "type": "color",
+        "id": "color_warning",
+        "label": "Warning color",
+        "default": "#faa05a"
+      },
+      {
+        "type": "color",
+        "id": "color_danger",
+        "label": "Danger / Error color",
+        "default": "#f0506e"
+      },
+      {
+        "type": "header",
+        "content": "Links & Borders"
+      },
+      {
+        "type": "color",
+        "id": "color_link",
+        "label": "Link color",
+        "default": "#1e87f0"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Border color",
+        "default": "#e5e5e5"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Heading font",
+        "default": "assistant_n6"
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "min": 0,
+        "max": 16,
+        "step": 1,
+        "default": 4,
+        "unit": "px",
+        "label": "Border radius"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "container_max_width",
+        "min": 900,
+        "max": 1600,
+        "step": 10,
+        "default": 1200,
+        "unit": "px",
+        "label": "Container max width"
+      },
+      {
+        "type": "range",
+        "id": "container_large_max_width",
+        "min": 1200,
+        "max": 1800,
+        "step": 10,
+        "default": 1400,
+        "unit": "px",
+        "label": "Large container max width"
+      },
+      {
+        "type": "range",
+        "id": "container_xlarge_max_width",
+        "min": 1400,
+        "max": 2000,
+        "step": 10,
+        "default": 1600,
+        "unit": "px",
+        "label": "XLarge container max width"
+      },
+      {
+        "type": "range",
+        "id": "container_small_max_width",
+        "min": 600,
+        "max": 1000,
+        "step": 10,
+        "default": 900,
+        "unit": "px",
+        "label": "Small container max width"
+      },
+      {
+        "type": "range",
+        "id": "container_xsmall_max_width",
+        "min": 400,
+        "max": 800,
+        "step": 10,
+        "default": 750,
+        "unit": "px",
+        "label": "XSmall container max width"
+      }
+    ]
+  },
+  {
+    "name": "Spacing",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Margins"
+      },
+      {
+        "type": "range",
+        "id": "margin_small",
+        "min": 5,
+        "max": 20,
+        "step": 1,
+        "default": 10,
+        "unit": "px",
+        "label": "Small margin"
+      },
+      {
+        "type": "range",
+        "id": "margin_default",
+        "min": 10,
+        "max": 40,
+        "step": 1,
+        "default": 20,
+        "unit": "px",
+        "label": "Default margin"
+      },
+      {
+        "type": "range",
+        "id": "margin_medium",
+        "min": 20,
+        "max": 60,
+        "step": 1,
+        "default": 40,
+        "unit": "px",
+        "label": "Medium margin"
+      },
+      {
+        "type": "range",
+        "id": "margin_large",
+        "min": 40,
+        "max": 100,
+        "step": 1,
+        "default": 70,
+        "unit": "px",
+        "label": "Large margin"
+      },
+      {
+        "type": "range",
+        "id": "margin_xlarge",
+        "min": 70,
+        "max": 180,
+        "step": 5,
+        "default": 140,
+        "unit": "px",
+        "label": "XLarge margin"
+      },
+      {
+        "type": "header",
+        "content": "Paddings"
+      },
+      {
+        "type": "range",
+        "id": "padding_small",
+        "min": 5,
+        "max": 30,
+        "step": 1,
+        "default": 15,
+        "unit": "px",
+        "label": "Small padding"
+      },
+      {
+        "type": "range",
+        "id": "padding_default",
+        "min": 15,
+        "max": 50,
+        "step": 1,
+        "default": 30,
+        "unit": "px",
+        "label": "Default padding"
+      },
+      {
+        "type": "range",
+        "id": "padding_large",
+        "min": 30,
+        "max": 100,
+        "step": 1,
+        "default": 70,
+        "unit": "px",
+        "label": "Large padding"
+      },
+      {
+        "type": "header",
+        "content": "Section Paddings"
+      },
+      {
+        "type": "range",
+        "id": "section_padding_small",
+        "min": 10,
+        "max": 40,
+        "step": 1,
+        "default": 20,
+        "unit": "px",
+        "label": "Section small padding"
+      },
+      {
+        "type": "range",
+        "id": "section_padding_default",
+        "min": 20,
+        "max": 60,
+        "step": 1,
+        "default": 40,
+        "unit": "px",
+        "label": "Section default padding"
+      },
+      {
+        "type": "range",
+        "id": "section_padding_large",
+        "min": 40,
+        "max": 140,
+        "step": 1,
+        "default": 70,
+        "unit": "px",
+        "label": "Section large padding"
+      },
+      {
+        "type": "range",
+        "id": "section_padding_xlarge",
+        "min": 70,
+        "max": 210,
+        "step": 5,
+        "default": 140,
+        "unit": "px",
+        "label": "Section xlarge padding"
+      }
+    ]
+  }
 ]

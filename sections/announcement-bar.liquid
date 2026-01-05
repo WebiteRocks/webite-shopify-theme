@@ -1,15 +1,15 @@
-<div class="uk-navbar-container uk-light uk-visible@m tm-toolbar-container">
-  <div class="uk-container uk-navbar" uk-navbar="">
-    <div class="uk-navbar-left">
+<div class="uk-navbar-container uk-navbar-transparent uk-light uk-visible@m tm-toolbar-container uk-background-secondary">
+  <div class="uk-container">
+    <div class="uk-navbar" uk-navbar="">
+      <div class="uk-navbar-left">
       <nav>
         <ul class="uk-navbar-nav">
           {% if section.settings.show_phone and section.settings.phone != blank %}
           <li><a href="tel:{{ section.settings.phone | remove: ' ' }}"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: receiver; ratio: .75;"></span><span class="tm-pseudo">{{ section.settings.phone }}</span></a></li>
           {% endif %}
           {% if section.settings.show_location %}
-          <li><a href="{{ section.settings.contact_page_url | default: '/pages/contact' }}" onclick="return false"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: location; ratio: .75;"></span><span class="tm-pseudo">{{ section.settings.location_label | default: shop.name }}</span><span uk-icon="icon: triangle-down; ratio: .75;" class="uk-icon"></span></a>
-            <div class="uk-margin-remove uk-drop" uk-drop="mode: click; pos: bottom-center;">
-              <div class="uk-card uk-card-default uk-card-small uk-box-shadow-xlarge uk-overflow-hidden uk-padding-small uk-padding-remove-horizontal uk-padding-remove-bottom">
+          <li class="uk-inline"><a href="#"><span class="uk-margin-xsmall-right uk-icon" uk-icon="icon: location; ratio: .75;"></span><span class="tm-pseudo">{{ section.settings.location_label | default: shop.name }}</span><span uk-icon="icon: triangle-down; ratio: .75;" class="uk-icon"></span></a>
+            <div class="uk-card uk-card-default uk-card-small uk-box-shadow-xlarge uk-overflow-hidden uk-padding-small uk-padding-remove-horizontal uk-padding-remove-bottom" uk-drop="mode: click; pos: bottom-center;">
                 <div class="uk-card-body">
                   <div class="uk-text-small">
                     {% if section.settings.store_name != blank %}
@@ -28,7 +28,6 @@
                   {% endif %}
                 </div>
               </div>
-            </div>
           </li>
           {% endif %}
           {% if section.settings.show_hours and section.settings.store_hours != blank %}
@@ -50,6 +49,7 @@
           {% endif %}
         </ul>
       </nav>
+    </div>
     </div>
   </div>
 </div>

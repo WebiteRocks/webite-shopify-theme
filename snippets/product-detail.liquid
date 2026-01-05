@@ -1,0 +1,355 @@
+{%- comment -%}
+  Product Detail - Reusable snippet
+  ==================================
+  Renders a complete product display with gallery and form.
+  Can be used on product page, in quick view modal, or featured product sections.
+
+  Usage:
+  {% render 'product-detail', product: product, section_id: section.id %}
+
+  Parameters:
+  - product: (required) The product object
+  - section_id: (required) Unique ID for this instance (for variant picker to work)
+  - show_breadcrumb: (optional) Show breadcrumb navigation, default false
+  - show_title: (optional) Show product title above the card, default false
+  - show_rating: (optional) Show rating block, default false
+  - show_variant_picker: (optional) Show variant picker, default false  
+  - show_price: (optional) Show price block, default false
+  - show_buy_buttons: (optional) Show buy buttons, default false
+  - show_quantity: (optional) Show quantity selector, default true
+  - show_wishlist: (optional) Show wishlist/compare buttons, default true
+  - show_inventory: (optional) Show inventory count, default false
+  - show_eta: (optional) Show ETA, default false
+  - eta_label: (optional) ETA label text
+  - show_shipping_info: (optional) Show shipping info, default false
+  - shipping_delivery_title: (optional) Delivery title
+  - shipping_delivery_text: (optional) Delivery text
+  - shipping_pickup_title: (optional) Pickup title
+  - shipping_pickup_text: (optional) Pickup text
+  - show_description: (optional) Show description, default false
+  - show_specifications: (optional) Show specifications, default false
+  - gallery_ratio: (optional) Gallery aspect ratio, default '1:1'
+  - compact: (optional) Use compact layout for modals, default false
+{%- endcomment -%}
+
+{%- liquid
+  assign section_id = section_id | default: 'product-detail'
+  assign gallery_ratio = gallery_ratio | default: '1:1'
+  assign eta_label = eta_label | default: 'Estimated Arrival'
+  assign shipping_delivery_title = shipping_delivery_title | default: 'Delivery'
+  assign shipping_delivery_text = shipping_delivery_text | default: 'In stock, free, tomorrow'
+  assign shipping_pickup_title = shipping_pickup_title | default: 'Pick up from store'
+  assign shipping_pickup_text = shipping_pickup_text | default: 'In stock, free, tomorrow'
+  
+  comment
+    For boolean values, we cannot use | default: because it treats false as falsy.
+    Instead, these values should be explicitly passed. If not passed, they default to false.
+    Exception: show_quantity and show_wishlist default to true when show_buy_buttons is true.
+  endcomment
+-%}
+
+{%- if show_breadcrumb -%}
+  <div class="uk-text-center uk-margin-bottom">
+    <ul class="uk-breadcrumb uk-flex-center uk-margin-remove">
+      <li><a href="{{ routes.root_url }}">Home</a></li>
+      {% if product.collections.first %}
+        <li><a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a></li>
+      {% endif %}
+      <li><span>{{ product.title }}</span></li>
+    </ul>
+  </div>
+{%- endif -%}
+
+{%- if show_title -%}
+  <h1 class="uk-margin-small-top uk-margin-bottom uk-text-center">{{ product.title }}</h1>
+{%- endif -%}
+
+<div class="uk-card uk-card-default {% if compact %}uk-card-small{% endif %} tm-product-detail" data-product-detail data-product-url="{{ product.url }}">
+  <div class="uk-grid-small uk-grid-collapse uk-grid-match uk-grid" uk-grid="">
+    {%- comment -%} Gallery Column {%- endcomment -%}
+    <div class="uk-width-1-1 uk-width-expand@m">
+      <div class="uk-grid-collapse uk-child-width-1-1 uk-slideshow uk-grid" uk-slideshow="finite: true; ratio: {{ gallery_ratio }}; animation: fade" uk-grid="" data-product-gallery data-current-media-id="{{ product.selected_or_first_available_variant.featured_media.id }}">
+        <div>
+          <ul class="uk-slideshow-items" uk-lightbox="" style="aspect-ratio: {{ gallery_ratio | replace: ':', ' / ' }}; width: 100%;">
+            {%- for media in product.media -%}
+            <li data-media-id="{{ media.id }}" {% if product.selected_or_first_available_variant.featured_media.id == media.id %}data-variant-media="true"{% endif %}>
+              <a class="uk-card-body tm-media-box tm-media-box-zoom" href="{{ media | image_url: width: 2048 }}" aria-label="View larger image">
+                <figure class="tm-media-box-wrap">
+                  {%- case media.media_type -%}
+                    {%- when 'image' -%}
+                      {%- if forloop.first -%}
+                        {{ media.preview_image | image_url: width: 800 | image_tag: preload: true, loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw', widths: '400, 600, 800, 1000', alt: media.alt | default: product.title }}
+                      {%- else -%}
+                        {{ media.preview_image | image_url: width: 800 | image_tag: loading: 'lazy', sizes: '(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw', widths: '400, 600, 800, 1000', alt: media.alt | default: product.title }}
+                      {%- endif -%}
+                    {%- when 'video' -%}
+                      {{ media | video_tag: image_size: "1000x1000", loop: true, controls: true, muted: true, class: "uk-width-1-1" }}
+                    {%- when 'external_video' -%}
+                      {{ media | external_video_tag: image_size: "1000x1000", loop: true, controls: true, muted: true, class: "uk-width-1-1" }}
+                    {%- when 'model' -%}
+                      {{ media | model_viewer_tag: image_size: "1000x1000", reveal: "interaction", toggleable: true, class: "uk-width-1-1" }}
+                  {%- endcase -%}
+                </figure>
+              </a>
+            </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class="uk-grid-margin uk-first-column">
+          <div class="uk-card-body uk-flex uk-flex-center">
+            <div class="uk-width-1-2 uk-visible@s">
+              <div uk-slider="finite: true" class="uk-slider" data-product-thumbnails>
+                <div class="uk-position-relative">
+                  <div class="uk-slider-container">
+                    <ul class="tm-slider-items uk-slider-items uk-child-width-1-4 uk-grid uk-grid-small">
+                      {%- for media in product.media -%}
+                      <li uk-slideshow-item="{{ forloop.index0 }}" data-media-id="{{ media.id }}">
+                        <div class="tm-ratio tm-ratio-1-1">
+                          <a href="#" class="tm-media-box tm-media-box-frame {% if product.selected_or_first_available_variant.featured_media.id == media.id %}uk-active{% endif %}" data-thumbnail-link="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}" role="button">
+                            <figure class="tm-media-box-wrap">
+                              {%- case media.media_type -%}
+                                {%- when 'image' -%}
+                                  {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 150, 200', alt: media.alt | default: product.title }}
+                                {%- when 'video' -%}
+                                  <div class="uk-position-relative">
+                                    {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 150, 200', alt: media.alt | default: product.title }}
+                                    <div class="uk-position-center">
+                                      <span uk-icon="icon: play-circle; ratio: 1.5"></span>
+                                    </div>
+                                  </div>
+                                {%- when 'external_video' -%}
+                                  <div class="uk-position-relative">
+                                    {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 150, 200', alt: media.alt | default: product.title }}
+                                    <div class="uk-position-center">
+                                      <span uk-icon="icon: play-circle; ratio: 1.5"></span>
+                                    </div>
+                                  </div>
+                                {%- when 'model' -%}
+                                  <div class="uk-position-relative">
+                                    {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 150, 200', alt: media.alt | default: product.title }}
+                                    <div class="uk-position-center">
+                                      <span uk-icon="icon: world; ratio: 1.5"></span>
+                                    </div>
+                                  </div>
+                              {%- endcase -%}
+                            </figure>
+                          </a>
+                        </div>
+                      </li>
+                      {%- endfor -%}
+                    </ul>
+                    <div>
+                      <a class="uk-position-center-left-out uk-position-small uk-slidenav-previous uk-icon uk-slidenav" href="#" uk-slider-item="previous" uk-slidenav-previous="" aria-label="Previous slide"></a>
+                      <a class="uk-position-center-right-out uk-position-small uk-slidenav-next uk-icon uk-slidenav" href="#" uk-slider-item="next" uk-slidenav-next="" aria-label="Next slide"></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ul class="uk-slideshow-nav uk-dotnav uk-hidden@s"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} Product Info Column {%- endcomment -%}
+    <div class="uk-width-1-1 uk-width-1-3@m tm-product-info">
+      <div class="uk-card-body product-content">
+        <ajax-cart-product-form>
+          {% form 'product', product %}
+            
+            {%- comment -%} Product Title (for modals/featured where title isn't shown above) {%- endcomment -%}
+            {%- unless show_title -%}
+              <h2 class="uk-h4 uk-margin-small-bottom">
+                <a href="{{ product.url }}" class="uk-link-reset">{{ product.title }}</a>
+              </h2>
+            {%- endunless -%}
+            
+            {%- comment -%} Rating {%- endcomment -%}
+            {%- if show_rating -%}
+              <div class="uk-margin">
+                <div class="uk-grid-small uk-grid" uk-grid="">
+                  <div class="uk-flex uk-flex-middle">
+                    <ul class="uk-iconnav uk-margin-xsmall-bottom tm-rating">
+                      <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                      <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                      <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                      <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                      <li><span class="uk-text-warning" uk-icon="star"></span></li>
+                    </ul>
+                    <div class="uk-margin-xsmall-left"><a class="uk-text-meta" href="{{ product.url }}#reviews">(2)</a></div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Variant Picker {%- endcomment -%}
+            {%- if show_variant_picker and product.has_only_default_variant == false -%}
+              <div class="uk-margin">
+                <variant-selector 
+                  class="uk-grid-medium uk-grid product-content__variants" 
+                  uk-grid="" 
+                  data-section-id="{{ section_id }}"
+                  data-product-url="{{ product.url }}"
+                >
+                  {% for option in product.options_with_values %}
+                  <fieldset class="uk-fieldset{% if forloop.first %} uk-first-column{% endif %}">
+                    <legend class="uk-text-small uk-margin-xsmall-bottom">{{ option.name }}</legend>
+                    <ul class="uk-subnav tm-variations">
+                      {% for value in option.values %}
+                        {% if option.name == "Color" and value.swatch %}
+                          <li{% if option.selected_value == value %} class="uk-active"{% endif %}>
+                            <input type="radio" id="{{ section_id }}-{{ option.name | handle }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value }}" {% if option.selected_value == value %}checked{% endif %} class="tm-visually-hidden">
+                            <label for="{{ section_id }}-{{ option.name | handle }}-{{ forloop.index0 }}" class="uk-button uk-button-default uk-button-small tm-variation-color" uk-tooltip="{{ value }}">
+                              <span class="tm-color-swatch" style="{% if value.swatch.color %}background-color: {{ value.swatch.color }}{% elsif value.swatch.image %}background-image: url({{ value.swatch.image | image_url: width: 50 }}); background-size: cover;{% endif %}"></span>
+                            </label>
+                          </li>
+                        {% else %}
+                          <li{% if option.selected_value == value %} class="uk-active"{% endif %}>
+                            <input type="radio" id="{{ section_id }}-{{ option.name | handle }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value }}" {% if option.selected_value == value %}checked{% endif %} class="tm-visually-hidden">
+                            <label for="{{ section_id }}-{{ option.name | handle }}-{{ forloop.index0 }}" class="uk-button uk-button-default uk-button-small">{{ value }}</label>
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </fieldset>
+                  {% endfor %}
+                </variant-selector>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Price {%- endcomment -%}
+            {%- if show_price -%}
+              <div class="uk-margin">
+                <div class="uk-padding-small uk-background-primary-lighten uk-border-rounded">
+                  <div class="uk-grid-small uk-child-width-1-1 uk-grid" uk-grid="">
+                    <div>
+                      {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+                        <del class="uk-text-meta" data-compare-price>{{ product.selected_or_first_available_variant.compare_at_price | money }}</del>
+                      {% endif %}
+                      <div class="tm-product-price" data-product-price>{{ product.selected_or_first_available_variant.price | money }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Buy Buttons {%- endcomment -%}
+            {%- if show_buy_buttons -%}
+              <div class="uk-margin">
+                <div class="uk-background-primary-lighten uk-border-rounded">
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
+                  <div class="uk-flex uk-flex-wrap uk-flex-middle" style="gap: 10px;">
+                    {%- if show_quantity -%}
+                      <div class="uk-flex uk-flex-middle" style="flex-shrink: 0;">
+                        <quantity-selector data-max="{{ product.selected_or_first_available_variant.inventory_quantity }}">
+                          <button type="button" class="tm-quantity-button" data-quantity-minus aria-label="Decrease quantity">−</button>
+                          <input class="uk-input tm-quantity-input" name="quantity" type="text" maxlength="3" value="1" data-quantity-input aria-label="Quantity">
+                          <button type="button" class="tm-quantity-button" data-quantity-plus aria-label="Increase quantity">+</button>
+                        </quantity-selector>
+                      </div>
+                    {%- endif -%}
+                    <div style="flex: 1 1 auto; min-width: 0;">
+                      <button type="submit" name="add" class="uk-button uk-button-primary uk-width-1-1 tm-product-add-button tm-shine js-add-to-cart" uk-toggle="target: #cart-offcanvas" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                        {% if product.selected_or_first_available_variant.available %}
+                          Add to cart
+                        {% else %}
+                          Sold out
+                        {% endif %}
+                      </button>
+                    </div>
+                    {%- if show_wishlist -%}
+                      <div class="uk-flex uk-flex-middle" style="flex-shrink: 0;">
+                        <button type="button" class="uk-margin-small-right js-add-to js-add-to-favorites tm-action-button-active js-added-to" uk-tooltip="Add to favorites" aria-label="Add to favorites"><span uk-icon="heart" class="uk-icon"></span></button>
+                        <button type="button" class="js-add-to js-add-to-compare tm-action-button-active js-added-to" uk-tooltip="Add to compare" aria-label="Add to compare"><span uk-icon="copy" class="uk-icon"></span></button>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Inventory {%- endcomment -%}
+            {%- if show_inventory -%}
+              <div class="uk-margin">
+                <span class="uk-text-small uk-text-muted">Inventory: <span data-variant-inventory>{{ product.selected_or_first_available_variant.inventory_quantity }}</span></span>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} ETA {%- endcomment -%}
+            {%- if show_eta -%}
+              <div class="uk-margin" data-eta-block {% if product.selected_or_first_available_variant.metafields.custom.eta == blank %}style="display: none;"{% endif %}>
+                <div class="uk-grid-collapse uk-grid" uk-grid="">
+                  <span class="uk-margin-xsmall-right uk-icon" uk-icon="clock"></span>
+                  <div>
+                    <div class="uk-text-small">
+                      <span class="uk-text-bold">{{ eta_label }}:</span>
+                      <span data-variant-eta>{{ product.selected_or_first_available_variant.metafields.custom.eta }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Shipping Info {%- endcomment -%}
+            {%- if show_shipping_info -%}
+              <div class="uk-margin">
+                <div class="uk-padding-small uk-background-muted uk-border-rounded">
+                  <div class="uk-grid-small uk-child-width-1-1 uk-text-small" uk-grid="">
+                    <div>
+                      <div class="uk-grid-collapse uk-grid" uk-grid="">
+                        <span class="uk-margin-xsmall-right uk-icon uk-first-column" uk-icon="cart"></span>
+                        <div>
+                          <div class="uk-text-bolder">{{ shipping_delivery_title }}</div>
+                          <div class="uk-text-xsmall uk-text-muted">{{ shipping_delivery_text }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="uk-grid-margin">
+                      <div class="uk-grid-collapse uk-grid" uk-grid="">
+                        <span class="uk-margin-xsmall-right uk-icon uk-first-column" uk-icon="location"></span>
+                        <div>
+                          <div class="uk-text-bolder">{{ shipping_pickup_title }}</div>
+                          <div class="uk-text-xsmall uk-text-muted">{{ shipping_pickup_text }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Description {%- endcomment -%}
+            {%- if show_description -%}
+              <div class="uk-margin">
+                <div class="uk-text-small">{{ product.description }}</div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Specifications {%- endcomment -%}
+            {%- if show_specifications -%}
+              <div class="uk-margin">
+                <ul class="uk-list uk-text-small uk-margin-remove">
+                  {% for tag in product.tags %}
+                    {% if tag contains 'spec:' %}
+                      {% assign spec_parts = tag | remove: 'spec:' | split: ':' %}
+                      <li><span class="uk-text-muted">{{ spec_parts[0] }}: </span><span>{{ spec_parts[1] }}</span></li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+                <div class="uk-margin-small-top">
+                  <a class="uk-link-heading" href="{{ product.url }}">
+                    <span class="tm-pseudo">View full details</span>
+                    <span class="uk-margin-xsmall-left uk-icon" uk-icon="icon: arrow-right; ratio: .75;"></span>
+                  </a>
+                </div>
+              </div>
+            {%- endif -%}
+
+            <div data-ajax-cart-errors="form"></div>
+          {% endform %}
+        </ajax-cart-product-form>
+      </div>
+    </div>
+  </div>
+</div>

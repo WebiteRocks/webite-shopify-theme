@@ -1,0 +1,151 @@
+{%- comment -%}
+  Product Quick View Modal
+  ========================
+  A reusable modal that loads product details via AJAX.
+  Used on collection pages and anywhere a quick view popup is needed.
+
+  This snippet creates an empty modal container. The content is loaded
+  dynamically when a quick view button is clicked.
+
+  Usage:
+  Add this to your theme.liquid or wherever needed:
+  {% render 'product-quick-view' %}
+{%- endcomment -%}
+
+<script>
+(function() {
+  let quickViewInitialized = false;
+  let modal = null;
+  let contentContainer = null;
+  let scriptsLoaded = {};
+
+  // Load a script dynamically
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector('script[src="' + src + '"]')) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  // Create modal HTML only when first needed
+  function initQuickView() {
+    if (quickViewInitialized) return;
+    quickViewInitialized = true;
+
+    const modalHtml = `
+      <div id="product-quick-view-modal" class="uk-modal-full" uk-modal="bg-close: false">
+        <div class="uk-modal-dialog">
+          <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+          <div class="uk-grid-collapse uk-child-width-1-1" uk-grid>
+            <div class="uk-padding uk-padding-large">
+              <div class="uk-container uk-container-large">
+                <div id="product-quick-view-content" class="tm-quick-view-content">
+                  <div class="uk-flex uk-flex-center uk-flex-middle" style="min-height: 400px;">
+                    <div uk-spinner="ratio: 2"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    modal = document.getElementById('product-quick-view-modal');
+    contentContainer = document.getElementById('product-quick-view-content');
+    
+    scriptsLoaded = {
+      'variant-picker': !!window.customElements.get('variant-selector'),
+      'quantity-selector': !!window.customElements.get('quantity-selector')
+    };
+
+    // Clear content when modal is closed
+    UIkit.util.on(modal, 'hidden', function() {
+      contentContainer.innerHTML = '';
+    });
+  }
+
+  // Initialize components in loaded content
+  function initializeQuickViewComponents() {
+    if (typeof UIkit !== 'undefined') {
+      UIkit.update(contentContainer);
+    }
+    
+    setTimeout(function() {
+      const variantSelectors = contentContainer.querySelectorAll('variant-selector');
+      variantSelectors.forEach(function(el) {
+        if (el.connectedCallback) {
+          el.productData = null;
+          el.selectors = el.querySelectorAll("input[type='radio']");
+          el.handleChange = el.handleChange.bind(el);
+          
+          el.selectors.forEach(function(selector) {
+            selector.addEventListener("change", el.handleChange);
+          });
+        }
+      });
+      
+      const quantitySelectors = contentContainer.querySelectorAll('quantity-selector');
+      quantitySelectors.forEach(function(el) {
+        if (el.connectedCallback) {
+          el.connectedCallback();
+        }
+      });
+      
+      document.dispatchEvent(new CustomEvent('quickview:loaded', { 
+        detail: { container: contentContainer } 
+      }));
+    }, 50);
+  }
+
+  // Handle quick view button clicks (delegated)
+  document.addEventListener('click', function(e) {
+    const quickViewBtn = e.target.closest('[data-quick-view]');
+    if (!quickViewBtn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const productUrl = quickViewBtn.getAttribute('data-quick-view');
+    if (!productUrl) return;
+
+    // Initialize modal on first use
+    initQuickView();
+
+    // Show modal with loading state
+    UIkit.modal(modal).show();
+    contentContainer.innerHTML = '<div class="uk-flex uk-flex-center uk-flex-middle" style="min-height: 400px;"><div uk-spinner="ratio: 2"></div></div>';
+
+    // Fetch product section
+    const sectionUrl = productUrl + (productUrl.includes('?') ? '&' : '?') + 'section_id=product-quick-view-content';
+
+    fetch(sectionUrl)
+      .then(response => response.text())
+      .then(html => {
+        const cleanHtml = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+        contentContainer.innerHTML = cleanHtml;
+
+        Promise.all([
+          scriptsLoaded['variant-picker'] ? Promise.resolve() : loadScript('{{ "variant-picker.js" | asset_url }}'),
+          scriptsLoaded['quantity-selector'] ? Promise.resolve() : loadScript('{{ "quantity-selector.js" | asset_url }}')
+        ]).then(() => {
+          scriptsLoaded['variant-picker'] = true;
+          scriptsLoaded['quantity-selector'] = true;
+          initializeQuickViewComponents();
+        });
+      })
+      .catch(error => {
+        console.error('Quick view error:', error);
+        contentContainer.innerHTML = '<div class="uk-text-center uk-padding-large"><p class="uk-text-danger">Error loading product. Please try again.</p><a href="' + productUrl + '" class="uk-button uk-button-primary">View Product Page</a></div>';
+      });
+  });
+})();
+</script>

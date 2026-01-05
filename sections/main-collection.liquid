@@ -1,3 +1,20 @@
+{%- comment -%} Preload LCP image in document head for early discovery {%- endcomment -%}
+{%- if collection.products.first.featured_media -%}
+  {%- capture lcp_preload -%}
+    <link rel="preload" as="image" fetchpriority="high" href="{{ collection.products.first.featured_media.preview_image | image_url: width: 280 }}" imagesrcset="{{ collection.products.first.featured_media.preview_image | image_url: width: 165 }} 165w, {{ collection.products.first.featured_media.preview_image | image_url: width: 280 }} 280w, {{ collection.products.first.featured_media.preview_image | image_url: width: 330 }} 330w, {{ collection.products.first.featured_media.preview_image | image_url: width: 450 }} 450w, {{ collection.products.first.featured_media.preview_image | image_url: width: 560 }} 560w" imagesizes="(min-width: 960px) 280px, (min-width: 640px) 45vw, 50vw">
+  {%- endcapture -%}
+  {{ lcp_preload }}
+{%- endif -%}
+
+{%- comment -%} Critical CSS inline for faster render {%- endcomment -%}
+<style>
+  .main-collection__image { aspect-ratio: 1/1; object-fit: cover; background: #f5f5f5; }
+  .main-collection__item { contain: layout style paint; }
+</style>
+
+{{ 'collection.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'collection-filters.js' | asset_url }}" defer></script>
+
 <section class="uk-section uk-section-default" id="collection-section" data-section-id="{{ section.id }}">
   <div class="uk-container">
     <div class="uk-text-center uk-margin-large-bottom">
@@ -20,19 +37,15 @@
       {%- endif -%}
     {%- endfor -%}
 
-    <div uk-grid>
+    <div class="uk-grid" uk-grid>
       {%- if collection.filters.size > 0 -%}
-        <!-- Filters Sidebar (Desktop) -->
-        <aside class="uk-width-1-4@m uk-visible@m">
-          <div id="collection-filters-desktop">
-            {% render 'collection-filters', collection: collection, active_filters_count: active_filters_count %}
-          </div>
-        </aside>
+        <!-- Filters Sidebar (Desktop) - filters moved here via JS on desktop -->
+        <aside class="uk-width-1-4@m uk-visible@m collection-filters-container" id="collection-filters-desktop"></aside>
       {%- endif -%}
 
       <!-- Products Grid -->
       <div class="{% if collection.filters.size > 0 %}uk-width-3-4@m{% else %}uk-width-1-1{% endif %}">
-        {% paginate collection.products by 12 %}
+        {% paginate collection.products by section.settings.products_per_page %}
         <div id="collection-product-grid">
           {%- if collection.products.size > 0 -%}
             <div class="uk-flex uk-flex-between uk-flex-middle uk-margin-bottom">
@@ -50,27 +63,34 @@
 
           <div class="uk-grid uk-grid-medium uk-child-width-1-2 uk-child-width-1-3@m" uk-grid id="collection-products">
             {%- for product in collection.products -%}
-              <div>
+              <div{% if forloop.index > 6 %} style="content-visibility: auto; contain-intrinsic-size: auto 400px;"{% endif %}>
                 <div class="uk-card uk-card-default uk-card-hover main-collection__item">
-                  <div class="uk-card-media-top">
+                  <div class="uk-card-media-top uk-position-relative" style="aspect-ratio: 1 / 1;">
                     <a href="{{ product.url }}">
                       {%- if product.featured_media -%}
-                        {% render 'image', 
-                            image: product.featured_media.preview_image,
-                            image_class: "main-collection__image uk-width-1-1",
-                            max_width: 600,
-                            max_height: 600,
-                            sizes: "(min-width: 600px) 300px, 100vw",
-                            widths: "300, 450, 600",
-                            loading: forloop.first ? 'eager' : 'lazy',
-                            attributes: 'alt="{{ product.featured_media.alt | default: product.title }}"'
-                        %}
+                        {%- if forloop.index <= 3 -%}
+                          {{ product.featured_media.preview_image | image_url: width: 560 | image_tag: class: 'main-collection__image uk-width-1-1', loading: 'eager', fetchpriority: 'high', decoding: 'sync', sizes: '(min-width: 960px) 280px, (min-width: 640px) 45vw, 50vw', widths: '165, 280, 330, 450, 560', alt: product.featured_media.alt | default: product.title }}
+                        {%- else -%}
+                          {{ product.featured_media.preview_image | image_url: width: 560 | image_tag: class: 'main-collection__image uk-width-1-1', loading: 'lazy', decoding: 'async', sizes: '(min-width: 960px) 280px, (min-width: 640px) 45vw, 50vw', widths: '165, 280, 330, 450, 560', alt: product.featured_media.alt | default: product.title }}
+                        {%- endif -%}
                       {%- else -%}
                         <div class="main-collection__image main-collection__no-image uk-width-1-1">
                           No Image
                         </div>
                       {%- endif -%}
                     </a>
+                    {%- if product.available and product.has_only_default_variant == false -%}
+                      <div class="uk-position-cover uk-flex uk-flex-center uk-flex-middle uk-hidden-hover" style="background: rgba(0,0,0,0.3);">
+                        <button type="button" class="uk-button uk-button-default uk-button-small" data-quick-view="{{ product.url }}">
+                          <span uk-icon="icon: expand; ratio: 0.8"></span> Quick View
+                        </button>
+                      </div>
+                    {%- endif -%}
+                    {%- if product.available and section.settings.atc_position == 'hover' -%}
+                      <div class="uk-position-bottom uk-position-small uk-hidden-hover">
+                        {% render 'product-atc-button', product: product, class: 'uk-button-small' %}
+                      </div>
+                    {%- endif -%}
                   </div>
                   <div class="uk-card-body uk-padding-small">
                     <a href="{{ product.url }}" class="uk-link-reset">
@@ -83,6 +103,11 @@
                         {{ product.price | money }}
                       </div>
                     </a>
+                    {%- if section.settings.atc_position == 'below' -%}
+                      <div class="uk-margin-small-top">
+                        {% render 'product-atc-button', product: product, class: 'uk-button-small', show_sold_out: true %}
+                      </div>
+                    {%- endif -%}
                   </div>
                 </div>
               </div>
@@ -131,215 +156,19 @@
   </div>
 </section>
 
-{%- comment -%} Mobile Filters Offcanvas {%- endcomment -%}
+{%- comment -%} Filters - Single instance, moved between desktop sidebar and mobile offcanvas via JS {%- endcomment -%}
 {%- if collection.filters.size > 0 -%}
+  <div id="collection-filters-wrapper">
+    {% render 'collection-filters', collection: collection, active_filters_count: active_filters_count %}
+  </div>
   <div id="mobile-filters" uk-offcanvas="overlay: true; flip: true">
-    <div class="uk-offcanvas-bar">
+    <div class="uk-offcanvas-bar collection-filters-container">
       <button class="uk-offcanvas-close" type="button" uk-close></button>
       <h3>Filters</h3>
-      <div id="collection-filters-mobile">
-        {% render 'collection-filters', collection: collection, active_filters_count: active_filters_count %}
-      </div>
+      <div id="collection-filters-mobile"></div>
     </div>
   </div>
 {%- endif -%}
-
-<style>
-  .tm-filter-swatch {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-    background-size: cover;
-  }
-  .collection-filters-form .uk-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-  }
-  .collection-loading {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-  .collection-loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 40px;
-    height: 40px;
-    margin: -20px 0 0 -20px;
-    border: 3px solid #ddd;
-    border-top-color: #333;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  #collection-product-grid {
-    position: relative;
-    min-height: 200px;
-  }
-</style>
-
-<script>
-  class CollectionFilters {
-    constructor() {
-      this.filterFormsSelector = '.collection-filters-form';
-      this.productGridSelector = '#collection-product-grid';
-      this.filtersDesktopSelector = '#collection-filters-desktop';
-      this.filtersMobileSelector = '#collection-filters-mobile';
-      this.sectionId = '{{ section.id }}';
-      
-      this.init();
-    }
-
-    init() {
-      this.bindEvents();
-    }
-
-    bindEvents() {
-      // Handle checkbox changes (instant filter)
-      document.addEventListener('change', (e) => {
-        if (e.target.matches('.collection-filters-form input[type="checkbox"]')) {
-          this.onFilterChange(e.target.closest('form'));
-        }
-      });
-
-      // Handle price range input (debounced)
-      let priceTimeout;
-      document.addEventListener('input', (e) => {
-        if (e.target.matches('.collection-filters-form input[type="number"]')) {
-          clearTimeout(priceTimeout);
-          priceTimeout = setTimeout(() => {
-            this.onFilterChange(e.target.closest('form'));
-          }, 500);
-        }
-      });
-
-      // Handle form submit (fallback)
-      document.addEventListener('submit', (e) => {
-        if (e.target.matches('.collection-filters-form')) {
-          e.preventDefault();
-          this.onFilterChange(e.target);
-        }
-      });
-
-      // Handle clear filter links
-      document.addEventListener('click', (e) => {
-        const clearLink = e.target.closest('.js-filter-clear, .collection-filters-form a[href*="url_to_remove"], .collection-filters-form a[href="{{ collection.url }}"]');
-        if (clearLink) {
-          e.preventDefault();
-          this.fetchAndUpdate(clearLink.href);
-        }
-        
-        // Handle active filter tag removal
-        const filterTag = e.target.closest('.collection-filters-form .uk-label[href]');
-        if (filterTag) {
-          e.preventDefault();
-          this.fetchAndUpdate(filterTag.href);
-        }
-
-        // Handle pagination
-        const paginationLink = e.target.closest('.js-pagination-link');
-        if (paginationLink) {
-          e.preventDefault();
-          this.fetchAndUpdate(paginationLink.href);
-          // Scroll to top of products
-          document.querySelector('#collection-product-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    }
-
-    onFilterChange(form) {
-      const formData = new FormData(form);
-      const params = new URLSearchParams();
-      
-      for (const [key, value] of formData.entries()) {
-        if (value) {
-          params.append(key, value);
-        }
-      }
-      
-      const url = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-      this.fetchAndUpdate(url);
-    }
-
-    async fetchAndUpdate(url) {
-      const productGrid = document.querySelector(this.productGridSelector);
-      
-      // Show loading state
-      productGrid?.classList.add('collection-loading');
-
-      try {
-        // Use Section Rendering API for better performance
-        const sectionUrl = url + (url.includes('?') ? '&' : '?') + `sections=${this.sectionId}`;
-        
-        const response = await fetch(sectionUrl);
-
-        if (!response.ok) throw new Error('Network response was not ok');
-
-        const data = await response.json();
-        const html = data[this.sectionId];
-        
-        if (!html) {
-          throw new Error('Section HTML not found in response');
-        }
-        
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-
-        // Update product grid
-        const newProductGrid = doc.querySelector(this.productGridSelector);
-        if (newProductGrid && productGrid) {
-          productGrid.innerHTML = newProductGrid.innerHTML;
-        }
-
-        // Update desktop filters
-        const newFiltersDesktop = doc.querySelector(this.filtersDesktopSelector);
-        const filtersDesktop = document.querySelector(this.filtersDesktopSelector);
-        if (newFiltersDesktop && filtersDesktop) {
-          filtersDesktop.innerHTML = newFiltersDesktop.innerHTML;
-        }
-
-        // Update mobile filters
-        const newFiltersMobile = doc.querySelector(this.filtersMobileSelector);
-        const filtersMobile = document.querySelector(this.filtersMobileSelector);
-        if (newFiltersMobile && filtersMobile) {
-          filtersMobile.innerHTML = newFiltersMobile.innerHTML;
-        }
-
-        // Update URL without page reload
-        history.pushState({}, '', url);
-
-        // Re-initialize UIkit components
-        if (typeof UIkit !== 'undefined') {
-          UIkit.update();
-        }
-
-      } catch (error) {
-        console.error('Error fetching filtered products:', error);
-        // Fallback to page reload
-        window.location.href = url;
-      } finally {
-        productGrid?.classList.remove('collection-loading');
-      }
-    }
-  }
-
-  // Initialize on DOM ready
-  document.addEventListener('DOMContentLoaded', () => {
-    new CollectionFilters();
-  });
-
-  // Handle browser back/forward
-  window.addEventListener('popstate', () => {
-    window.location.reload();
-  });
-</script>
 
 {% schema %}
 {
@@ -363,6 +192,30 @@
       "max": 48,
       "step": 4,
       "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Product Card"
+    },
+    {
+      "type": "select",
+      "id": "atc_position",
+      "label": "Add to cart button position",
+      "options": [
+        {
+          "value": "hover",
+          "label": "Show on hover"
+        },
+        {
+          "value": "below",
+          "label": "Below price"
+        },
+        {
+          "value": "none",
+          "label": "Hidden"
+        }
+      ],
+      "default": "hover"
     }
   ]
 }

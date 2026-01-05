@@ -1,14 +1,5 @@
 <script src="{{ 'variant-picker.js' | asset_url }}" defer></script>
 <script src="{{ 'quantity-selector.js' | asset_url }}" defer></script>
-<script>
-  document.addEventListener('liquid-ajax-cart:request-end', function(event) {
-    const { requestState } = event.detail;
-    // Open side cart only after successful add to cart
-    if (requestState.requestType === 'add' && !requestState.errors) {
-      UIkit.offcanvas('#cart-offcanvas').show();
-    }
-  });
-</script>
 
 <section class="uk-section uk-section-small">
           <div class="uk-container">
@@ -29,11 +20,12 @@
                     <div class="uk-card uk-card-default uk-card-small tm-ignore-container">
                       <div class="uk-grid-small uk-grid-collapse uk-grid-match uk-grid" uk-grid="">
                         <div class="uk-width-1-1 uk-width-expand@m">
-                          <div class="uk-grid-collapse uk-child-width-1-1 uk-slideshow uk-grid" uk-slideshow="finite: true; ratio: 1:1; animation: fade" uk-grid="" data-product-gallery data-current-media-id="{{ product.selected_or_first_available_variant.featured_media.id }}">
+                          {%- assign current_variant_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+                          <div class="uk-grid-collapse uk-child-width-1-1 uk-slideshow uk-grid" uk-slideshow="finite: true; ratio: 1:1; animation: fade" uk-grid="" data-product-gallery data-current-media-id="{{ current_variant_media.id }}">
                             <div>
                               <ul class="uk-slideshow-items" uk-lightbox="" style="aspect-ratio: 1 / 1; width: 100%;">
                                 {%- for media in product.media -%}
-                                <li data-media-id="{{ media.id }}" {% if product.selected_or_first_available_variant.featured_media.id == media.id %}data-variant-media="true"{% endif %}>
+                                <li data-media-id="{{ media.id }}" {% if current_variant_media.id == media.id %}data-variant-media="true"{% endif %}>
                                   <a class="uk-card-body tm-media-box tm-media-box-zoom" href="{{ media | image_url: width: 2048 }}" aria-label="View larger image">
                                     <figure class="tm-media-box-wrap">
                                       {%- case media.media_type -%}
@@ -66,7 +58,7 @@
                                             {%- for media in product.media -%}
                                             <li uk-slideshow-item="{{ forloop.index0 }}" data-media-id="{{ media.id }}">
                                               <div class="tm-ratio tm-ratio-1-1">
-                                                <a href="#" class="tm-media-box tm-media-box-frame {% if product.selected_or_first_available_variant.featured_media.id == media.id %}uk-active{% endif %}" data-thumbnail-link="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}" role="button">
+                                                <a href="#" class="tm-media-box tm-media-box-frame {% if current_variant_media.id == media.id %}uk-active{% endif %}" data-thumbnail-link="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}" role="button">
                                                   <figure class="tm-media-box-wrap">
                                                     {%- case media.media_type -%}
                                                       {%- when 'image' -%}
@@ -147,21 +139,19 @@
                                       {% for option in product.options_with_values %}
                                       <fieldset class="uk-fieldset{% if forloop.first %} uk-first-column{% endif %}">
                                         <legend class="uk-text-small uk-margin-xsmall-bottom">{{ option.name }}</legend>
-                                        <ul class="uk-subnav uk-subnav-pill tm-variations">
+                                        <ul class="uk-subnav tm-variations">
                                           {% for value in option.values %}
                                             {% if option.name == "Color" and value.swatch %}
                                               <li{% if option.selected_value == value %} class="uk-active"{% endif %}>
-                                                <a href="#" class="tm-variation-color" uk-tooltip="{{ value }}" role="button">
-                                                  <input type="radio" id="{{ section.id }}-{{ option.name | handle }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value }}" {% if option.selected_value == value %}checked{% endif %} class="uk-hidden">
-                                                  <div style="{% if value.swatch.color %}background-color: {{ value.swatch.color }}{% elsif value.swatch.image %}background-image: url({{ value.swatch.image | image_url: width: 50 }}); background-size: cover;{% endif %}"></div>
-                                                </a>
+                                                <input type="radio" id="{{ section.id }}-{{ option.name | handle }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value }}" {% if option.selected_value == value %}checked{% endif %} class="tm-visually-hidden">
+                                                <label for="{{ section.id }}-{{ option.name | handle }}-{{ forloop.index0 }}" class="uk-button uk-button-default uk-button-small tm-variation-color" uk-tooltip="{{ value }}">
+                                                  <span class="tm-color-swatch" style="{% if value.swatch.color %}background-color: {{ value.swatch.color }}{% elsif value.swatch.image %}background-image: url({{ value.swatch.image | image_url: width: 50 }}); background-size: cover;{% endif %}"></span>
+                                                </label>
                                               </li>
                                             {% else %}
                                               <li{% if option.selected_value == value %} class="uk-active"{% endif %}>
-                                                <a href="#" role="button">
-                                                  <input type="radio" id="{{ section.id }}-{{ option.name | handle }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value }}" {% if option.selected_value == value %}checked{% endif %} class="uk-hidden">
-                                                  {{ value }}
-                                                </a>
+                                                <input type="radio" id="{{ section.id }}-{{ option.name | handle }}-{{ forloop.index0 }}" name="{{ option.name }}" value="{{ value }}" {% if option.selected_value == value %}checked{% endif %} class="tm-visually-hidden">
+                                                <label for="{{ section.id }}-{{ option.name | handle }}-{{ forloop.index0 }}" class="uk-button uk-button-default uk-button-small">{{ value }}</label>
                                               </li>
                                             {% endif %}
                                           {% endfor %}
@@ -188,32 +178,28 @@
 
                                 {% when 'buy_buttons' %}
                                   <div class="uk-margin" {{ block.shopify_attributes }}>
-                                    <div class="uk-padding-small uk-background-primary-lighten uk-border-rounded">
-                                      <div class="uk-grid-small uk-child-width-1-1 uk-grid" uk-grid="">
-                                        <div>
-                                          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
-                                          <div class="uk-grid-small uk-grid" uk-grid="">
-                                            <div>
-                                              <quantity-selector data-max="{{ product.selected_or_first_available_variant.inventory_quantity }}">
-                                                <button type="button" class="tm-quantity-button" data-quantity-minus aria-label="Decrease quantity">−</button>
-                                                <input class="uk-input tm-quantity-input" name="quantity" type="text" maxlength="3" value="1" data-quantity-input aria-label="Quantity">
-                                                <button type="button" class="tm-quantity-button" data-quantity-plus aria-label="Increase quantity">+</button>
-                                              </quantity-selector>
-                                            </div>
-                                            <div>
-                                              <button type="submit" name="add" class="uk-button uk-button-primary tm-product-add-button tm-shine js-add-to-cart" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
-                                                {% if product.selected_or_first_available_variant.available %}
-                                                  Add to cart
-                                                {% else %}
-                                                  Sold out
-                                                {% endif %}
-                                              </button>
-                                            </div>
-                                            <div class="uk-width-auto uk-width-expand@s uk-flex uk-flex-middle uk-text-meta">
-                                              <button type="button" class="uk-margin-small-right js-add-to js-add-to-favorites tm-action-button-active js-added-to" uk-tooltip="Add to favorites" aria-label="Add to favorites"><span uk-icon="heart" class="uk-icon"></span></button>
-                                              <button type="button" class="js-add-to js-add-to-compare tm-action-button-active js-added-to" uk-tooltip="Add to compare" aria-label="Add to compare"><span uk-icon="copy" class="uk-icon"></span></button>
-                                            </div>
-                                          </div>
+                                    <div class="uk-background-primary-lighten uk-border-rounded">
+                                      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
+                                      <div class="uk-flex uk-flex-wrap uk-flex-middle" style="gap: 10px;">
+                                        <div class="uk-flex uk-flex-middle" style="flex-shrink: 0;">
+                                          <quantity-selector data-max="{{ product.selected_or_first_available_variant.inventory_quantity }}">
+                                            <button type="button" class="tm-quantity-button" data-quantity-minus aria-label="Decrease quantity">−</button>
+                                            <input class="uk-input tm-quantity-input" name="quantity" type="text" maxlength="3" value="1" data-quantity-input aria-label="Quantity">
+                                            <button type="button" class="tm-quantity-button" data-quantity-plus aria-label="Increase quantity">+</button>
+                                          </quantity-selector>
+                                        </div>
+                                        <div style="flex: 1 1 auto; min-width: 0;">
+                                          <button type="submit" name="add" class="uk-button uk-button-primary uk-width-1-1 tm-product-add-button tm-shine js-add-to-cart" uk-toggle="target: #cart-offcanvas" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                                            {% if product.selected_or_first_available_variant.available %}
+                                              Add to cart
+                                            {% else %}
+                                              Sold out
+                                            {% endif %}
+                                          </button>
+                                        </div>
+                                        <div class="uk-flex uk-flex-middle" style="flex-shrink: 0;">
+                                          <button type="button" class="uk-margin-small-right js-add-to js-add-to-favorites tm-action-button-active js-added-to" uk-tooltip="Add to favorites" aria-label="Add to favorites"><span uk-icon="heart" class="uk-icon"></span></button>
+                                          <button type="button" class="js-add-to js-add-to-compare tm-action-button-active js-added-to" uk-tooltip="Add to compare" aria-label="Add to compare"><span uk-icon="copy" class="uk-icon"></span></button>
                                         </div>
                                       </div>
                                     </div>

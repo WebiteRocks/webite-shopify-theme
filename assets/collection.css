@@ -1,0 +1,139 @@
+/* Collection Page Styles */
+
+/* Filters container - shared styling for desktop sidebar and mobile offcanvas */
+.collection-filters-container {
+  background: var(--global-background);
+  color: var(--global-color);
+
+  /* Accordion titles */
+  & .uk-accordion-title {
+    color: var(--global-heading-color);
+
+    &:hover, &:focus {
+      color: var(--global-heading-color);
+    }
+
+    &::before {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20fill%3D%22%23666%22%20width%3D%2213%22%20height%3D%221%22%20x%3D%220%22%20y%3D%226%22%20%2F%3E%3Crect%20fill%3D%22%23666%22%20width%3D%221%22%20height%3D%2213%22%20x%3D%226%22%20y%3D%220%22%20%2F%3E%3C%2Fsvg%3E");
+    }
+  }
+
+  & .uk-open > .uk-accordion-title {
+    color: var(--global-heading-color);
+
+    &::before {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20fill%3D%22%23666%22%20width%3D%2213%22%20height%3D%221%22%20x%3D%220%22%20y%3D%226%22%20%2F%3E%3C%2Fsvg%3E");
+    }
+  }
+
+  /* Form inputs */
+  & .uk-input,
+  & .uk-select,
+  & .uk-textarea {
+    border-color: var(--global-border);
+    background: var(--global-background);
+    color: var(--global-color);
+
+    &:focus {
+      border-color: var(--global-primary-color);
+    }
+  }
+
+  & .uk-checkbox {
+    border-color: var(--global-border);
+    background: var(--global-background);
+  }
+
+  /* Links */
+  & a {
+    color: var(--global-heading-color);
+
+    &:hover {
+      color: var(--global-primary-color);
+    }
+  }
+}
+
+/* Offcanvas specific overrides */
+.uk-offcanvas-bar.collection-filters-container {
+  padding: 20px;
+
+  & .uk-offcanvas-close {
+    color: var(--global-heading-color);
+  }
+
+  & h3 {
+    color: var(--global-heading-color);
+  }
+}
+
+.tm-filter-swatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background-size: cover;
+}
+
+.collection-filters-form .uk-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+/* Loading state */
+.collection-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.collection-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 3px solid #ddd;
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: collection-spin 0.8s linear infinite;
+}
+
+@keyframes collection-spin {
+  to { transform: rotate(360deg); }
+}
+
+#collection-product-grid {
+  position: relative;
+  min-height: 200px;
+}
+
+/* Product card - contain layout for better performance */
+.main-collection__item {
+  contain: layout style paint;
+}
+
+/* Product card image optimization */
+.main-collection__image {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background-color: #f5f5f5;
+  contain: strict;
+}
+
+.main-collection__no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  color: #999;
+}
+
+/* Reduce paint on hover overlay */
+.main-collection__item .uk-position-cover {
+  will-change: opacity;
+}

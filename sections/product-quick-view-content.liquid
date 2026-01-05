@@ -1,0 +1,76 @@
+{%- comment -%}
+  Product Quick View Content Section
+  ===================================
+  This section is loaded via AJAX into the quick view modal.
+  It uses the product-detail snippet to render the product.
+  Note: Scripts are loaded dynamically by product-quick-view.liquid
+{%- endcomment -%}
+
+{% render 'product-detail',
+  product: product,
+  section_id: section.id,
+  show_breadcrumb: false,
+  show_title: false,
+  show_rating: section.settings.show_rating,
+  show_variant_picker: true,
+  show_price: true,
+  show_buy_buttons: true,
+  show_quantity: section.settings.show_quantity,
+  show_wishlist: section.settings.show_wishlist,
+  show_inventory: section.settings.show_inventory,
+  show_eta: false,
+  show_shipping_info: section.settings.show_shipping_info,
+  show_description: section.settings.show_description,
+  show_specifications: section.settings.show_specifications,
+  compact: true
+%}
+
+{% schema %}
+{
+  "name": "Quick View Content",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "Show quantity selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist/compare buttons",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_inventory",
+      "label": "Show inventory count",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping_info",
+      "label": "Show shipping info",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_specifications",
+      "label": "Show specifications",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

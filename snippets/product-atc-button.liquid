@@ -1,0 +1,49 @@
+{%- comment -%}
+  Product Add to Cart Button - Reusable snippet
+  ==============================================
+  Renders an ajax add to cart button for simple products,
+  or a "Select options" button that opens quick view modal for products with variants.
+
+  Usage:
+  {% render 'product-atc-button', product: product, class: 'uk-button-small' %}
+
+  Parameters:
+  - product: (required) The product object
+  - class: (optional) Additional button classes
+  - show_sold_out: (optional) Show "Sold out" button if unavailable, default false
+  - quick_view: (optional) Open quick view modal for variants instead of linking, default true
+{%- endcomment -%}
+
+{%- liquid
+  assign button_class = class | default: ''
+  assign show_sold_out_button = show_sold_out | default: false
+  assign use_quick_view = quick_view | default: true
+-%}
+
+{%- if product.available -%}
+  {%- if product.has_only_default_variant -%}
+    <ajax-cart-product-form>
+      {% form 'product', product %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" name="add" class="uk-button uk-button-primary uk-width-1-1 {{ button_class }}" uk-toggle="target: #cart-offcanvas">
+          Add to cart
+        </button>
+      {% endform %}
+    </ajax-cart-product-form>
+  {%- else -%}
+    {%- if use_quick_view -%}
+      <button type="button" class="uk-button uk-button-primary uk-width-1-1 {{ button_class }}" data-quick-view="{{ product.url }}">
+        Select options
+      </button>
+    {%- else -%}
+      <a href="{{ product.url }}" class="uk-button uk-button-primary uk-width-1-1 {{ button_class }}">
+        Select options
+      </a>
+    {%- endif -%}
+  {%- endif -%}
+{%- elsif show_sold_out_button -%}
+  <button class="uk-button uk-button-default uk-width-1-1 {{ button_class }}" disabled>
+    Sold out
+  </button>
+{%- endif -%}

@@ -5,7 +5,7 @@
     <div class="uk-margin-bottom">
       <div class="uk-flex uk-flex-between uk-flex-middle uk-margin-small-bottom">
         <span class="uk-text-bold">Active Filters ({{ active_filters_count }})</span>
-        <a href="{{ collection.url }}" class="uk-link-muted uk-text-small">Clear all</a>
+        <a href="{{ collection.url }}" class="uk-link-muted uk-text-small js-filter-clear">Clear all</a>
       </div>
       <div class="uk-flex uk-flex-wrap" uk-grid="margin: small">
         {%- for filter in collection.filters -%}
@@ -34,10 +34,10 @@
   {%- endif -%}
 
   {%- comment -%} Filter Groups {%- endcomment -%}
-  <ul class="uk-accordion-default" uk-accordion="multiple: true">
+  <ul uk-accordion="multiple: true">
     {%- for filter in collection.filters -%}
       <li class="{% if filter.active_values.size > 0 or filter.min_value.value != nil or filter.max_value.value != nil %}uk-open{% endif %}">
-        <a class="uk-accordion-title uk-flex uk-flex-between uk-flex-middle uk-width-1-1" href uk-accordion-icon>
+        <a class="uk-accordion-title" href>
           {{ filter.label }}
           {%- if filter.active_values.size > 0 -%}
             <span class="uk-badge uk-margin-small-left">{{ filter.active_values.size }}</span>

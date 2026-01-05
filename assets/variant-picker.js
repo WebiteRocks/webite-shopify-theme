@@ -13,20 +13,25 @@ class VariantSelector extends HTMLElement {
     return this.getAttribute("data-product-url") || window.location.pathname;
   }
   
+  // Get the closest product content container (for scoped DOM queries)
+  get productContainer() {
+    // Look for a common container that includes both gallery and product info
+    // Try specific product containers first, then fall back to section or document
+    return this.closest('[data-product-container]') 
+      || this.closest('.tm-ignore-container') 
+      || this.closest('.product-content') 
+      || this.closest('.tm-quick-view-content') 
+      || this.closest('section')
+      || document;
+  }
+  
   connectedCallback() {
     this.selectors = this.querySelectorAll("input[type='radio']");
-    this.variationLinks = this.querySelectorAll('.tm-variations a');
     this.handleChange = this.handleChange.bind(this);
-    this.handleLinkClick = this.handleLinkClick.bind(this);
 
     // Listen to radio changes
     this.selectors.forEach((selector) => {
       selector.addEventListener("change", this.handleChange);
-    });
-
-    // Listen to clicks on variation links (for styled buttons)
-    this.variationLinks.forEach((link) => {
-      link.addEventListener("click", this.handleLinkClick);
     });
 
     // Navigate gallery to selected variant's image on page load
@@ -37,42 +42,22 @@ class VariantSelector extends HTMLElement {
     this.selectors.forEach((selector) => {
       selector.removeEventListener("change", this.handleChange);
     });
-    this.variationLinks.forEach((link) => {
-      link.removeEventListener("click", this.handleLinkClick);
-    });
     // Cancel any pending fetch
     if (this.abortController) {
       this.abortController.abort();
     }
   }
 
-  handleLinkClick(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    // Find the radio input inside this link
-    const link = event.currentTarget;
-    const radio = link.querySelector("input[type='radio']");
-    
-    if (!radio) return;
-    
-    // Only process if this option is not already selected
-    if (radio.checked) return;
-    
-    radio.checked = true;
+  async handleChange(event) {
+    const radio = event.currentTarget;
     
     // Update active state on list items
-    const ul = link.closest('ul');
+    const ul = radio.closest('ul');
     if (ul) {
       ul.querySelectorAll('li').forEach(li => li.classList.remove('uk-active'));
-      link.closest('li').classList.add('uk-active');
+      radio.closest('li').classList.add('uk-active');
     }
     
-    // Trigger the change handler
-    this.handleChange({ currentTarget: radio });
-  }
-
-  async handleChange(event) {
     // Cancel any previous pending request
     if (this.abortController) {
       this.abortController.abort();
@@ -101,14 +86,14 @@ class VariantSelector extends HTMLElement {
       const data = await response.text();
       
       // Preserve current quantity value
-      const currentQuantityInput = document.querySelector('[data-quantity-input]');
+      const currentQuantityInput = this.productContainer.querySelector('[data-quantity-input]');
       const currentQuantity = currentQuantityInput ? currentQuantityInput.value : '1';
       
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = data;
 
       // Update product content but preserve the variant-selector element
-      const productContent = document.querySelector(".product-content");
+      const productContent = this.productContainer.querySelector(".product-content") || this.productContainer;
       const newContent = tempDiv.querySelector(".product-content");
       
       if (productContent && newContent) {
@@ -179,20 +164,24 @@ class VariantSelector extends HTMLElement {
       this.updateGalleryFromResponse(tempDiv);
 
       // Restore quantity value
-      const newQuantityInput = document.querySelector('[data-quantity-input]');
+      const newQuantityInput = this.productContainer.querySelector('[data-quantity-input]');
       if (newQuantityInput && currentQuantity) {
         newQuantityInput.value = currentQuantity;
       }
 
       // Re-initialize UIKit components on new content (icons, tooltips, etc.)
       if (typeof UIkit !== 'undefined') {
-        UIkit.update(document.querySelector('.product-content'));
+        UIkit.update(this.productContainer);
       }
 
-      // Update browser URL
-      const browserUrl = new URL(this.productUrl, window.location.origin);
-      browserUrl.searchParams.set('variant', variantId);
-      window.history.replaceState({}, '', browserUrl.toString());
+      // Update browser URL only if we're on the actual product page
+      // Don't update URL in quick view modal, featured product section, or any non-product page
+      const isOnProductPage = window.location.pathname.includes('/products/');
+      if (isOnProductPage) {
+        const browserUrl = new URL(window.location.href);
+        browserUrl.searchParams.set('variant', variantId);
+        window.history.replaceState({}, '', browserUrl.toString());
+      }
     } catch (error) {
       if (error.name !== "AbortError") {
         console.error("Error fetching variant:", error);
@@ -252,8 +241,8 @@ class VariantSelector extends HTMLElement {
     const mediaId = newGallery.dataset.currentMediaId;
     if (!mediaId) return;
     
-    // Find the slide index by matching media ID
-    const slides = document.querySelectorAll('[data-product-gallery] .uk-slideshow-items li');
+    // Find the slide index by matching media ID (scoped to this product's container)
+    const slides = this.productContainer.querySelectorAll('[data-product-gallery] .uk-slideshow-items li');
     let slideIndex = 0;
     
     slides.forEach((slide, index) => {
@@ -263,7 +252,7 @@ class VariantSelector extends HTMLElement {
     });
     
     // Navigate slideshow to the variant's media
-    const slideshowElement = document.querySelector('[uk-slideshow]');
+    const slideshowElement = this.productContainer.querySelector('[uk-slideshow]');
     if (slideshowElement && typeof UIkit !== 'undefined') {
       try {
         UIkit.slideshow(slideshowElement).show(slideIndex);
@@ -276,7 +265,7 @@ class VariantSelector extends HTMLElement {
     this.updateThumbnailHighlight(slideIndex, mediaId);
     
     // Update the data attribute on the gallery
-    const currentGallery = document.querySelector('[data-product-gallery]');
+    const currentGallery = this.productContainer.querySelector('[data-product-gallery]');
     if (currentGallery) {
       currentGallery.dataset.currentMediaId = mediaId;
     }
@@ -284,28 +273,27 @@ class VariantSelector extends HTMLElement {
   
   updateThumbnailHighlight(slideIndex, mediaId) {
     // Remove existing active state from all thumbnails
-    const thumbnails = document.querySelectorAll('[data-product-thumbnails] a');
+    const thumbnails = this.productContainer.querySelectorAll('[data-product-thumbnails] a');
     thumbnails.forEach(thumb => {
       thumb.classList.remove('uk-active');
     });
     
     // Add active state to the current variant's thumbnail
-    const targetThumbnail = document.querySelector(`[data-product-thumbnails] li[data-media-id="${mediaId}"] a`);
+    const targetThumbnail = this.productContainer.querySelector(`[data-product-thumbnails] li[data-media-id="${mediaId}"] a`);
     if (targetThumbnail) {
       targetThumbnail.classList.add('uk-active');
     }
   }
 
   initGalleryPosition() {
-    // Get the current variant's media ID from the gallery data attribute
-    const gallery = document.querySelector('[data-product-gallery]');
+    const gallery = this.productContainer.querySelector('[data-product-gallery]');
     if (!gallery) return;
     
     const mediaId = gallery.dataset.currentMediaId;
     if (!mediaId) return;
     
     // Find the slide index by matching media ID
-    const slides = document.querySelectorAll('[data-product-gallery] .uk-slideshow-items li');
+    const slides = this.productContainer.querySelectorAll('[data-product-gallery] .uk-slideshow-items li');
     let slideIndex = 0;
     
     slides.forEach((slide, index) => {
@@ -318,7 +306,7 @@ class VariantSelector extends HTMLElement {
     if (slideIndex > 0) {
       // Small delay to ensure UIkit slideshow is initialized
       setTimeout(() => {
-        const slideshowElement = document.querySelector('[uk-slideshow]');
+        const slideshowElement = this.productContainer.querySelector('[uk-slideshow]');
         if (slideshowElement && typeof UIkit !== 'undefined') {
           try {
             UIkit.slideshow(slideshowElement).show(slideIndex);
